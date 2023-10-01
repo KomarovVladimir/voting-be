@@ -1,6 +1,7 @@
 import express from "express";
+import cors from "cors";
 
-import "./db.ts";
+import "./services/db.ts";
 
 const app = express();
 const port = 5000;

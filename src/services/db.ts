@@ -1,13 +1,9 @@
 import mysql2 from "mysql2";
 import "dotenv/config.js";
 
-var con = mysql2.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    multipleStatements: true,
-});
+import { databaseOptions } from "../config/databaseOptions.ts";
+
+var con = mysql2.createConnection(databaseOptions);
 
 const sql = `
     DROP TABLE IF EXISTS test;
