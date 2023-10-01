@@ -1,5 +1,7 @@
 import express from "express";
 
+import "./db.ts";
+
 const app = express();
 const port = 5000;
 
