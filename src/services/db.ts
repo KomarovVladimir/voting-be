@@ -1,9 +1,9 @@
-import mysql2 = require("mysql2");
-import "dotenv/config.js";
+import mysql2 = require("mysql2")
+import "dotenv/config.js"
 
-import { databaseOptions } from "../config/databaseOptions";
+import { databaseOptions } from "../config/database"
 
-const con = mysql2.createConnection(databaseOptions);
+const con = mysql2.createConnection(databaseOptions)
 
 const sql = `
     DROP TABLE IF EXISTS test;
@@ -21,15 +21,15 @@ const sql = `
         ("C");
         
     SELECT * FROM test;
-`;
+`
 
 con.connect(function (err) {
-    if (err) throw err;
+    if (err) throw err
 
-    console.log("Connected!");
+    console.log("Connected!")
 
     con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log(result);
-    });
-});
+        if (err) throw err
+        console.log(result)
+    })
+})
