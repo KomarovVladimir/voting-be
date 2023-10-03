@@ -1,9 +1,9 @@
 import mysql2 = require("mysql2")
 import "dotenv/config.js"
 
-import { databaseOptions } from "../config/database"
+import { dbConfig } from "../config/db.config"
 
-const con = mysql2.createConnection(databaseOptions)
+const con = mysql2.createConnection(dbConfig)
 
 const sql = `
     DROP TABLE IF EXISTS test;
