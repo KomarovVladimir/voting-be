@@ -1,26 +1,45 @@
 import express from "express"
-import fs from "fs"
+import mysql2 = require("mysql2")
+import "dotenv/config.js"
+// import fs from "fs"
 // import cors from "cors";
+
+import { dbConfig } from "./config/db.config"
 
 // import "./services/db"
 
 export const app = express()
 
-app.use(function (request, response, next) {
-    const now = new Date()
-    const hour = now.getHours()
-    const minutes = now.getMinutes()
-    const seconds = now.getSeconds()
-    const data = `${hour}:${minutes}:${seconds} ${request.method} ${
-        request.url
-    } ${request.get("user-agent")}`
-    console.log(data)
-    fs.appendFile("server.log", data + "\n", function () {})
-    next()
+const jsonParser = express.json()
+
+const sql = `   
+    SELECT * FROM user
+    WHERE first_name = "Name";
+`
+
+app.get("/login", jsonParser, function (request, response) {
+    if (!request.body) return response.sendStatus(400)
+
+    const con = mysql2.createConnection(dbConfig)
+
+    con.connect(function (err) {
+        if (err) throw err
+
+        console.log("Connected!")
+
+        con.query(sql, function (err, result) {
+            if (err) {
+                throw err
+            }
+
+            console.log(result)
+            response.json(result)
+        })
+    })
 })
 
 app.get("/", function (request, response) {
-    response.send("Hello")
+    response.sendFile(process.cwd() + "/register.html")
 })
 
 const port = 5000
