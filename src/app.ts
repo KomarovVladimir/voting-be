@@ -4,7 +4,7 @@ import "dotenv/config.js"
 // import fs from "fs"
 // import cors from "cors";
 
-import { dbConfig } from "./config/db.config"
+import { dbConfig } from "../config/db.config"
 
 // import "./services/db"
 

@@ -1,7 +1,7 @@
 import mysql2 = require("mysql2")
 import "dotenv/config.js"
 
-import { dbConfig } from "../config/db.config"
+import { dbConfig } from "../../config/db.config"
 
 const con = mysql2.createConnection(dbConfig)
 
