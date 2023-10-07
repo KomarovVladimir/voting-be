@@ -8,15 +8,17 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "baseUrl": ".",
+        "baseUrl": "src/",
         "paths": {
-            "*": ["node_modules/*", "src/types/*"],
-            "@config/*": ["config/*"],
-            "@models/*": ["src/models/*"],
-            "@controllers/*": ["src/controllers/*"],
-            "@routes/*": ["src/routes/*"],
-            "@utils/*": ["src/utils/*"]
+            "@config/*": ["../config/*"],
+            "@models/*": ["./models/*"],
+            "@controllers/*": ["./controllers/*"],
+            "@routes/*": ["./routes/*"],
+            "@utils/*": ["./utils/*"]
         }
     },
-    "include": ["src/**/*", "config"]
+    "include": ["src/**/*", "config"],
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    }
 }
