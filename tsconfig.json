@@ -11,7 +11,11 @@
         "baseUrl": ".",
         "paths": {
             "*": ["node_modules/*", "src/types/*"],
-            "@config/*": ["config/*"]
+            "@config/*": ["config/*"],
+            "@models/*": ["src/models/*"],
+            "@controllers/*": ["src/controllers/*"],
+            "@routes/*": ["src/routes/*"],
+            "@utils/*": ["src/utils/*"]
         }
     },
     "include": ["src/**/*", "config"]
