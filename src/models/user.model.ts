@@ -25,6 +25,8 @@ export class User {
     }
 
     static async getAll() {
+        console.log(213234234)
+
         const sql = "SELECT * FROM user"
         const [rows] = await pool.execute(sql)
 
@@ -56,5 +58,3 @@ export class User {
         await pool.execute(sql, [id])
     }
 }
-
-module.exports = User

@@ -1,6 +1,7 @@
-import { IUser, User } from "@models/user.model"
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
+
+import { IUser, User } from "@models/user.model"
 
 export const getUsers = async (req: Request, res: Response) => {
     try {
@@ -13,6 +14,8 @@ export const getUsers = async (req: Request, res: Response) => {
             data: users,
         })
     } catch (err) {
+        console.error(err)
+
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
