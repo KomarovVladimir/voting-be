@@ -26,8 +26,6 @@ export const getUsers = async (req: Request, res: Response) => {
 }
 
 export const addUser = async (req: Request, res: Response) => {
-    const { email, password, firstName, lastName } = req.body
-
     if (some(values(req.body), isNil)) {
         return res.status(400).send({
             statusCode: 400,
@@ -36,6 +34,8 @@ export const addUser = async (req: Request, res: Response) => {
             data: null,
         })
     }
+
+    const { email, password, firstName, lastName } = req.body
 
     try {
         User.add({ email, password, firstName, lastName } as IUser)
