@@ -114,3 +114,59 @@ export const deleteUser = async (req: Request, res: Response) => {
         })
     }
 }
+
+export const login = async (
+    req: Request<{}, {}, Partial<IUser>>,
+    res: Response
+) => {
+    try {
+        const { email, password } = req.body
+        const user = await User.findByEmail(email)
+
+        console.log(user.password == password)
+
+        if (user.password === password) {
+            res.send({
+                statusCode: 200,
+                statusMessage: "Ok",
+                message: "Successfully logged in.",
+                data: user,
+            })
+        } else {
+            res.status(401).send({
+                statusCode: 401,
+                statusMessage: "Wrong password.",
+                message: null,
+                data: null,
+            })
+        }
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).send({
+            statusCode: 500,
+            statusMessage: "Internal Server Error",
+            message: null,
+            data: null,
+        })
+    }
+}
+
+export const logout = async (req: Request, res: Response) => {
+    try {
+        res.send({
+            statusCode: 200,
+            statusMessage: "Ok",
+            message: "Successfully logged out.",
+        })
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).send({
+            statusCode: 500,
+            statusMessage: "Internal Server Error",
+            message: null,
+            data: null,
+        })
+    }
+}

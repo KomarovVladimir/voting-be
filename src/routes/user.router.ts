@@ -5,12 +5,18 @@ import {
     addUser,
     updateUser,
     deleteUser,
+    login,
+    logout,
 } from "@controllers/user.controller"
 
 export const usersRouter = Router()
 
 usersRouter.get("/", getUsers)
 
-usersRouter.post("/", addUser)
+usersRouter.post("/login", login)
+
+usersRouter.post("/logout", logout)
+
+usersRouter.post("/register", addUser)
 
 usersRouter.route("/:id").put(updateUser).delete(deleteUser)

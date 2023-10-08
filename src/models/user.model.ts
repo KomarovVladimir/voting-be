@@ -8,31 +8,28 @@ export interface IUser {
     lastName?: string
 }
 
+//TODO: Add an actual login logic
+//TODO: Add a timestamp tracking
+//TODO: Update the return types
 export class User {
     static async add({ email, password, firstName, lastName }: IUser) {
-        const timestamp = new Date().getTime()
+        // const timestamp = new Date().getTime()
         const sql = `
-            INSERT INTO user (email, password, first_name, last_name, creation_date)
-            VALUES(?, ?, ?, ?, ?, ?)
+            INSERT INTO user (email, password, first_name, last_name)
+            VALUES(?, ?, ?, ?);
         `
-        await pool.execute(sql, [
-            email,
-            password,
-            firstName,
-            lastName,
-            timestamp,
-        ])
+        await pool.execute(sql, [email, password, firstName, lastName])
     }
 
     static async getAll() {
-        const sql = "SELECT * FROM user"
+        const sql = "SELECT * FROM user;"
         const [rows] = await pool.execute(sql)
 
         return rows
     }
 
     static async getById(id: number) {
-        const sql = `SELECT * FROM user WHERE user_id = ,`
+        const sql = `SELECT * FROM user WHERE id = ?;`
         const result = await pool.execute(sql, [id])
 
         return result
@@ -45,14 +42,26 @@ export class User {
         const sql = `
             UPDATE user
             SET email = ?, password = ?, first_name = ?, last_name = ?,  
-            WHERE id = ?"
+            WHERE id = ?;"
         `
         await pool.execute(sql, [email, password, firstName, lastName, id])
     }
 
     static async deleteById(id: number) {
-        const sql = "DELETE FROM users WHERE id = ?"
+        const sql = "DELETE FROM user WHERE id = ?;"
 
         await pool.execute(sql, [id])
+    }
+
+    static async findByEmail(email: string) {
+        const sql = `
+            SELECT email, password, first_name, last_name
+            FROM user WHERE email = ?;
+        `
+        const [rows] = await pool.execute(sql, [email])
+
+        if (Array.isArray(rows)) {
+            return rows[0] as IUser
+        }
     }
 }
