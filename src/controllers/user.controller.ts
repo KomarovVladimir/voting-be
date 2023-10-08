@@ -116,7 +116,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 }
 
 export const login = async (
-    req: Request<{}, {}, Partial<IUser>>,
+    req: Request<never, never, Pick<IUser, "email" | "password">>,
     res: Response
 ) => {
     try {
