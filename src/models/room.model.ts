@@ -29,14 +29,11 @@ export class Room {
         return result
     }
 
-    static async updateById(
-        id: number,
-        { name, status }: Pick<IRoom, "name" | "status">
-    ) {
+    static async updateById({ id, name, status }: IRoom) {
         const sql = `
             UPDATE room
             SET name = ?, status = ?,  
-            WHERE id = ?;"
+            WHERE id = ?;
         `
         await pool.execute(sql, [name, status, id])
     }

@@ -35,14 +35,17 @@ export class User {
         return result
     }
 
-    static async updateById(
-        id: number,
-        { email, password, firstName, lastName }: IUser
-    ) {
+    static async updateById({
+        id,
+        email,
+        password,
+        firstName,
+        lastName,
+    }: IUser) {
         const sql = `
             UPDATE user
             SET email = ?, password = ?, first_name = ?, last_name = ?,  
-            WHERE id = ?;"
+            WHERE id = ?;
         `
         await pool.execute(sql, [email, password, firstName, lastName, id])
     }
