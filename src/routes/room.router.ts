@@ -1,6 +1,7 @@
 import { Router } from "express"
 
 import {
+    getRoomById,
     getRooms,
     addRoom,
     updateRoom,
@@ -13,4 +14,4 @@ roomsRouter.get("/", getRooms)
 
 roomsRouter.post("/", addRoom)
 
-roomsRouter.route("/:id").put(updateRoom).delete(deleteRoom)
+roomsRouter.route("/:id").get(getRoomById).put(updateRoom).delete(deleteRoom)

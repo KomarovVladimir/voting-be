@@ -69,7 +69,8 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 
     try {
-        await User.updateById(id, {
+        await User.updateById({
+            id,
             email,
             password,
             firstName,

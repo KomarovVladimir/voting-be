@@ -1,17 +1,19 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Room, IRoom } from "@models/room.model"
+import { Item, IItem } from "@models/item.model"
 
-export const getRooms = async (req: Request, res: Response) => {
+export const getItems = async (req: Request, res: Response) => {
     try {
-        const rooms = await Room.getAll()
+        const items = await Item.getAll()
+
+        console.log(items)
 
         res.send({
             statusCode: 200,
             statusMessage: "Ok",
-            message: "Successfully retrieved all the rooms.",
-            data: rooms,
+            message: "Successfully retrieved all the items.",
+            data: items,
         })
     } catch (err) {
         console.error(err)
@@ -25,29 +27,7 @@ export const getRooms = async (req: Request, res: Response) => {
     }
 }
 
-export const getRoomById = async (req: Request, res: Response) => {
-    try {
-        const rooms = await Room.getById(Number(req.params.id))
-
-        res.send({
-            statusCode: 200,
-            statusMessage: "Ok",
-            message: "Successfully retrieved a room.",
-            data: rooms,
-        })
-    } catch (err) {
-        console.error(err)
-
-        res.status(500).send({
-            statusCode: 500,
-            statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
-        })
-    }
-}
-
-export const addRoom = async (req: Request, res: Response) => {
+export const addItem = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
         return res.status(400).send({
             statusCode: 400,
@@ -60,12 +40,12 @@ export const addRoom = async (req: Request, res: Response) => {
     const { name } = req.body
 
     try {
-        Room.add(name)
+        Item.add(name)
 
         res.status(201).send({
             statusCode: 201,
             statusMessage: "Created",
-            message: "Successfully created a room.",
+            message: "Successfully created a item.",
             data: null,
         })
     } catch (err) {
@@ -78,7 +58,7 @@ export const addRoom = async (req: Request, res: Response) => {
     }
 }
 
-export const updateRoom = async (req: Request, res: Response) => {
+export const updateItem = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
         return res.status(400).send({
             statusCode: 400,
@@ -88,10 +68,10 @@ export const updateRoom = async (req: Request, res: Response) => {
         })
     }
 
-    const { id, name, status } = req.body
+    const { id, name } = req.body
 
     try {
-        await Room.updateById({ id, name, status } as IRoom)
+        await Item.updateById({ id, name } as IItem)
 
         return res.status(202).send({
             statusCode: 202,
@@ -110,11 +90,11 @@ export const updateRoom = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteRoom = async (req: Request, res: Response) => {
+export const deleteItem = async (req: Request, res: Response) => {
     const id = Number(req.params.id)
 
     try {
-        await Room.deleteById(id)
+        await Item.deleteById(id)
 
         res.send({
             statusCode: 200,
