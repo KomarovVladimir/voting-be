@@ -123,8 +123,6 @@ export const login = async (
         const { email, password } = req.body
         const user = await User.findByEmail(email)
 
-        console.log(user.password == password)
-
         if (user.password === password) {
             res.send({
                 statusCode: 200,
