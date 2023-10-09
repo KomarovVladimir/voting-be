@@ -7,8 +7,6 @@ export const getItems = async (req: Request, res: Response) => {
     try {
         const items = await Item.getAll()
 
-        console.log(items)
-
         res.send({
             statusCode: 200,
             statusMessage: "Ok",

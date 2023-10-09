@@ -23,9 +23,9 @@ export class User {
 
     static async getAll() {
         const sql = "SELECT * FROM user;"
-        const [rows] = await pool.execute(sql)
+        const [result] = await pool.execute(sql)
 
-        return rows
+        return result
     }
 
     static async getById(id: number) {
@@ -61,10 +61,8 @@ export class User {
             SELECT email, password, first_name, last_name
             FROM user WHERE email = ?;
         `
-        const [rows] = await pool.execute(sql, [email])
+        const [result] = await pool.execute(sql, [email])
 
-        if (Array.isArray(rows)) {
-            return rows[0] as IUser
-        }
+        return result
     }
 }

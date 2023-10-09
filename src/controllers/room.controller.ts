@@ -27,13 +27,13 @@ export const getRooms = async (req: Request, res: Response) => {
 
 export const getRoomById = async (req: Request, res: Response) => {
     try {
-        const rooms = await Room.getById(Number(req.params.id))
+        const result = await Room.getById(Number(req.params.id))
 
         res.send({
             statusCode: 200,
             statusMessage: "Ok",
             message: "Successfully retrieved a room.",
-            data: rooms,
+            data: Array.isArray(result) ? (result[0] as IRoom) : result,
         })
     } catch (err) {
         console.error(err)

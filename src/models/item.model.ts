@@ -18,14 +18,14 @@ export class Item {
 
     static async getAll() {
         const sql = "SELECT * FROM item;"
-        const [rows] = await pool.execute(sql)
+        const [result] = await pool.execute(sql)
 
-        return rows
+        return result
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM item WHERE id = ?;`
-        const result = await pool.execute(sql, [id])
+        const [result] = await pool.execute(sql, [id])
 
         return result
     }
