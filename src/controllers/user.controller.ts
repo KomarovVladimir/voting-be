@@ -3,6 +3,7 @@ import { values, some, isNil } from "lodash"
 
 import { IUser, User } from "@models/user.model"
 
+//TODO: Work on responses
 export const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await User.getAll()
@@ -11,16 +12,13 @@ export const getUsers = async (req: Request, res: Response) => {
             statusCode: 200,
             statusMessage: "Ok",
             message: "Successfully retrieved all the users.",
-            data: users,
-        })
+        }).json(users)
     } catch (err) {
         console.error(err)
 
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -30,8 +28,6 @@ export const addUser = async (req: Request, res: Response) => {
         return res.status(400).send({
             statusCode: 400,
             statusMessage: "Bad Request",
-            message: null,
-            data: null,
         })
     }
 
@@ -44,14 +40,11 @@ export const addUser = async (req: Request, res: Response) => {
             statusCode: 201,
             statusMessage: "Created",
             message: "Successfully created a user.",
-            data: null,
         })
     } catch (err) {
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -63,8 +56,6 @@ export const updateUser = async (req: Request, res: Response) => {
         return res.status(400).send({
             statusCode: 400,
             statusMessage: "Bad Request",
-            message: null,
-            data: null,
         })
     }
 
@@ -81,15 +72,12 @@ export const updateUser = async (req: Request, res: Response) => {
             statusCode: 202,
             statusMessage: "Accepted",
             message: "Successfully updated a user.",
-            data: null,
         })
     } catch (err) {
         console.log(err)
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -104,14 +92,11 @@ export const deleteUser = async (req: Request, res: Response) => {
             statusCode: 200,
             statusMessage: "Ok",
             message: "Successfully deleted a user.",
-            data: null,
         })
     } catch (err) {
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -122,21 +107,16 @@ export const login = async (
 ) => {
     try {
         const { email, password } = req.body
-        const user = await User.findByEmail(email)
+        const user = (await User.findByEmail(email)) as IUser
 
         if (user.password === password) {
-            res.send({
-                statusCode: 200,
-                statusMessage: "Ok",
-                message: "Successfully logged in.",
-                data: user,
-            })
+            console.log(user)
+
+            res.json(user)
         } else {
             res.status(401).send({
                 statusCode: 401,
                 statusMessage: "Wrong password.",
-                message: null,
-                data: null,
             })
         }
     } catch (err) {
@@ -145,8 +125,6 @@ export const login = async (
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -164,8 +142,6 @@ export const logout = async (req: Request, res: Response) => {
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }

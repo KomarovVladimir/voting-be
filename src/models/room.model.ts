@@ -26,13 +26,13 @@ export class Room {
         const sql = `SELECT * FROM room WHERE id = ?;`
         const [result] = await pool.execute(sql, [id])
 
-        return result
+        return Array.isArray(result) ? (result[0] as IRoom) : result
     }
 
     static async updateById({ id, name, status }: IRoom) {
         const sql = `
             UPDATE room
-            SET name = ?, status = ?,  
+            SET name = ?, status = ?  
             WHERE id = ?;
         `
         await pool.execute(sql, [name, status, id])

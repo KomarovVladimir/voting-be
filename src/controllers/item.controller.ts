@@ -7,20 +7,13 @@ export const getItems = async (req: Request, res: Response) => {
     try {
         const items = await Item.getAll()
 
-        res.send({
-            statusCode: 200,
-            statusMessage: "Ok",
-            message: "Successfully retrieved all the items.",
-            data: items,
-        })
+        res.json(items)
     } catch (err) {
         console.error(err)
 
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -30,28 +23,21 @@ export const addItem = async (req: Request, res: Response) => {
         return res.status(400).send({
             statusCode: 400,
             statusMessage: "Bad Request",
-            message: null,
-            data: null,
         })
     }
 
-    const { name } = req.body
-
     try {
-        Item.add(name)
+        Item.add(req.body)
 
         res.status(201).send({
             statusCode: 201,
             statusMessage: "Created",
             message: "Successfully created a item.",
-            data: null,
         })
     } catch (err) {
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -61,29 +47,22 @@ export const updateItem = async (req: Request, res: Response) => {
         return res.status(400).send({
             statusCode: 400,
             statusMessage: "Bad Request",
-            message: null,
-            data: null,
         })
     }
 
-    const { id, name } = req.body
-
     try {
-        await Item.updateById({ id, name } as IItem)
+        await Item.updateById(req.body as IItem)
 
         return res.status(202).send({
             statusCode: 202,
             statusMessage: "Accepted",
             message: "Successfully updated a user.",
-            data: null,
         })
     } catch (err) {
         console.log(err)
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }
@@ -98,14 +77,11 @@ export const deleteItem = async (req: Request, res: Response) => {
             statusCode: 200,
             statusMessage: "Ok",
             message: "Successfully deleted a user.",
-            data: null,
         })
     } catch (err) {
         res.status(500).send({
             statusCode: 500,
             statusMessage: "Internal Server Error",
-            message: null,
-            data: null,
         })
     }
 }

@@ -63,6 +63,6 @@ export class User {
         `
         const [result] = await pool.execute(sql, [email])
 
-        return result
+        return Array.isArray(result) ? result[0] : result
     }
 }

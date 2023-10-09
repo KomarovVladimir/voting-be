@@ -14,4 +14,4 @@ roomsRouter.get("/", getRooms)
 
 roomsRouter.post("/", addRoom)
 
-roomsRouter.route("/:id").get(getRoomById).put(updateRoom).delete(deleteRoom)
+roomsRouter.route("/:id").get(getRoomById).patch(updateRoom).delete(deleteRoom)
