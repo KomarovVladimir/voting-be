@@ -20,7 +20,7 @@ export const getRooms = async (req: Request, res: Response) => {
 
 export const getRoomById = async (req: Request, res: Response) => {
     try {
-        const result = await Room.getById(Number(req.params.id))
+        const result = await Room.getById(Number(req.params.roomId))
 
         res.json(result)
     } catch (err) {
