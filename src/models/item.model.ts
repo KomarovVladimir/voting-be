@@ -8,8 +8,9 @@ export interface IItem {
 }
 
 //TODO: Update the return types
+//TODO: Add all the checks
 export class Item {
-    static async add({ name, roomId }: IItem) {
+    static async add({ name, roomId }: Pick<IItem, "name" | "roomId">) {
         const sql = `
             INSERT INTO item (name, votes, room_id)
             VALUES(?, 0, ?);
@@ -17,9 +18,9 @@ export class Item {
         await pool.execute(sql, [name, roomId])
     }
 
-    static async getAll() {
-        const sql = "SELECT * FROM item;"
-        const [result] = await pool.execute(sql)
+    static async getAll(roomId: string) {
+        const sql = "SELECT * FROM item WHERE room_id =  ?;"
+        const [result] = await pool.execute(sql, [roomId])
 
         return result
     }

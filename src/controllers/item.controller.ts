@@ -5,7 +5,7 @@ import { Item, IItem } from "@models/item.model"
 
 export const getItems = async (req: Request, res: Response) => {
     try {
-        const items = await Item.getAll()
+        const items = await Item.getAll(req.params.roomId)
 
         res.json(items)
     } catch (err) {
@@ -19,7 +19,7 @@ export const getItems = async (req: Request, res: Response) => {
 }
 
 export const addItem = async (req: Request, res: Response) => {
-    if (some(values(req.body), isNil)) {
+    if (isNil(req.body.name)) {
         return res.status(400).send({
             statusCode: 400,
             statusMessage: "Bad Request",
@@ -27,12 +27,15 @@ export const addItem = async (req: Request, res: Response) => {
     }
 
     try {
-        Item.add(req.body)
+        Item.add({
+            roomId: Number(req.params.roomId),
+            name: req.body.name,
+        })
 
         res.status(201).send({
             statusCode: 201,
             statusMessage: "Created",
-            message: "Successfully created a item.",
+            message: "Successfully created an item.",
         })
     } catch (err) {
         res.status(500).send({
@@ -76,7 +79,7 @@ export const deleteItem = async (req: Request, res: Response) => {
         res.send({
             statusCode: 200,
             statusMessage: "Ok",
-            message: "Successfully deleted a user.",
+            message: "Successfully deleted an item.",
         })
     } catch (err) {
         res.status(500).send({
