@@ -4,10 +4,24 @@ import cors from "cors"
 
 import { usersRouter } from "@routes/user.router"
 import { roomsRouter } from "@routes/room.router"
-
-export const app = express()
+import { BaseError } from "@utils/baseError"
+import { isOperationalError, logError } from "@utils/errorHandler"
 
 //TODO: Update the cors
+export const app = express()
+
+process.on("uncaughtException", (error: Error | BaseError) => {
+    logError(error)
+
+    if (!isOperationalError(error)) {
+        process.exit(1)
+    }
+})
+
+process.on("unhandledRejection", (error) => {
+    throw error
+})
+
 app.use(
     cors({
         origin: "*",
