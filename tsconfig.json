@@ -14,7 +14,8 @@
             "@models/*": ["./models/*"],
             "@controllers/*": ["./controllers/*"],
             "@routes/*": ["./routes/*"],
-            "@utils/*": ["./utils/*"]
+            "@utils/*": ["./utils/*"],
+            "@common/*": ["./common/*"]
         }
     },
     "include": ["src/**/*", "config"],

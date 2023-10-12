@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { isNil } from "lodash"
 
 import { Message, IMessage } from "@models/message.model"
+import { httpStatusCodes } from "@common/httpStatusCodes"
 
 //TODO: Optimize error handling
 //TODO: Test the existing codebase
@@ -13,8 +14,8 @@ export const getMessages = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err)
 
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -22,8 +23,8 @@ export const getMessages = async (req: Request, res: Response) => {
 
 export const addMessage = async (req: Request, res: Response) => {
     if (isNil(req.body.text)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -41,8 +42,8 @@ export const addMessage = async (req: Request, res: Response) => {
             message: "Successfully posted a message.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -50,8 +51,8 @@ export const addMessage = async (req: Request, res: Response) => {
 
 export const updateMessage = async (req: Request, res: Response) => {
     if (isNil(req.body.text)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -66,8 +67,8 @@ export const updateMessage = async (req: Request, res: Response) => {
         })
     } catch (err) {
         console.log(err)
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -80,13 +81,13 @@ export const deleteMessage = async (req: Request, res: Response) => {
         await Message.deleteById(id)
 
         res.send({
-            statusCode: 200,
+            statusCode: httpStatusCodes.OK,
             statusMessage: "Ok",
             message: "Successfully deleted an item.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }

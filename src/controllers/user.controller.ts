@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
 import { IUser, User } from "@models/user.model"
+import { httpStatusCodes } from "@common/httpStatusCodes"
 
 //TODO: Work on responses
 export const getUsers = async (req: Request, res: Response) => {
@@ -9,15 +10,15 @@ export const getUsers = async (req: Request, res: Response) => {
         const users = await User.getAll()
 
         res.send({
-            statusCode: 200,
+            statusCode: httpStatusCodes.OK,
             statusMessage: "Ok",
             message: "Successfully retrieved all the users.",
         }).json(users)
     } catch (err) {
         console.error(err)
 
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -25,8 +26,8 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -42,8 +43,8 @@ export const addUser = async (req: Request, res: Response) => {
             message: "Successfully created a user.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -53,8 +54,8 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id, email, password, firstName, lastName } = req.body
 
     if (some(values(req.body), isNil)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -75,8 +76,8 @@ export const updateUser = async (req: Request, res: Response) => {
         })
     } catch (err) {
         console.log(err)
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -89,13 +90,13 @@ export const deleteUser = async (req: Request, res: Response) => {
         await User.deleteById(id)
 
         res.send({
-            statusCode: 200,
+            statusCode: httpStatusCodes.OK,
             statusMessage: "Ok",
             message: "Successfully deleted a user.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -122,8 +123,8 @@ export const login = async (
     } catch (err) {
         console.error(err)
 
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -132,15 +133,15 @@ export const login = async (
 export const logout = async (req: Request, res: Response) => {
     try {
         res.send({
-            statusCode: 200,
+            statusCode: httpStatusCodes.OK,
             statusMessage: "Ok",
             message: "Successfully logged out.",
         })
     } catch (err) {
         console.error(err)
 
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }

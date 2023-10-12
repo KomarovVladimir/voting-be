@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
 import { Room, IRoom } from "@models/room.model"
+import { httpStatusCodes } from "@common/httpStatusCodes"
 
 export const getRooms = async (req: Request, res: Response) => {
     try {
@@ -12,7 +13,7 @@ export const getRooms = async (req: Request, res: Response) => {
         console.error(err)
 
         res.send({
-            statusCode: 500,
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -26,8 +27,8 @@ export const getRoomById = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err)
 
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -35,8 +36,8 @@ export const getRoomById = async (req: Request, res: Response) => {
 
 export const addRoom = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -52,8 +53,8 @@ export const addRoom = async (req: Request, res: Response) => {
             message: "Successfully created a room.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -61,8 +62,8 @@ export const addRoom = async (req: Request, res: Response) => {
 
 export const updateRoom = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
-        return res.status(400).send({
-            statusCode: 400,
+        return res.status(httpStatusCodes.BAD_REQUEST).send({
+            statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
     }
@@ -79,8 +80,8 @@ export const updateRoom = async (req: Request, res: Response) => {
         })
     } catch (err) {
         console.log(err)
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
@@ -93,13 +94,13 @@ export const deleteRoom = async (req: Request, res: Response) => {
         await Room.deleteById(id)
 
         res.send({
-            statusCode: 200,
+            statusCode: httpStatusCodes.OK,
             statusMessage: "Ok",
             message: "Successfully deleted a user.",
         })
     } catch (err) {
-        res.status(500).send({
-            statusCode: 500,
+        res.status(httpStatusCodes.INTERNAL_SERVER).send({
+            statusCode: httpStatusCodes.INTERNAL_SERVER,
             statusMessage: "Internal Server Error",
         })
     }
