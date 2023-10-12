@@ -111,8 +111,6 @@ export const login = async (
         const user = (await User.findByEmail(email)) as IUser
 
         if (user.password === password) {
-            console.log(user)
-
             res.json(user)
         } else {
             res.status(401).send({
