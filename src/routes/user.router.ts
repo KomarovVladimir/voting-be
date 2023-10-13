@@ -11,12 +11,12 @@ import {
 
 export const usersRouter = Router()
 
-usersRouter.get("/", getUsers)
+usersRouter.get("/api/users/", getUsers)
 
-usersRouter.post("/login", login)
+usersRouter.post("/api/users/login", login)
 
-usersRouter.post("/logout", logout)
+usersRouter.post("/api/users/logout", logout)
 
-usersRouter.post("/register", addUser)
+usersRouter.post("/api/users/register", addUser)
 
-usersRouter.route("/:id").put(updateUser).delete(deleteUser)
+usersRouter.route("/api/users/:id").put(updateUser).delete(deleteUser)

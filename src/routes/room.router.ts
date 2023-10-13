@@ -23,22 +23,28 @@ import {
 export const roomsRouter = Router()
 
 //Rooms manages
-roomsRouter.route("/").get(getRooms).post(addRoom)
+roomsRouter.route("/api/rooms/").get(getRooms).post(addRoom)
 
 //Room
 roomsRouter
-    .route("/:roomId")
+    .route("/api/rooms/:roomId")
     .get(getRoomById)
     .patch(updateRoom)
     .delete(deleteRoom)
 
 //Room items
-roomsRouter.route("/:roomId/items").get(getItems).post(addItem)
-roomsRouter.route("/:roomId/items/:id").put(updateItem).delete(deleteItem)
+roomsRouter.route("/api/rooms/:roomId/items").get(getItems).post(addItem)
+roomsRouter
+    .route("/api/rooms/:roomId/items/:id")
+    .put(updateItem)
+    .delete(deleteItem)
 
 //Messages
-roomsRouter.route("/:roomId/messages").get(getMessages).post(addMessage)
 roomsRouter
-    .route("/:roomId/messages/:id")
+    .route("/api/rooms/:roomId/messages")
+    .get(getMessages)
+    .post(addMessage)
+roomsRouter
+    .route("/api/rooms/:roomId/messages/:id")
     .put(updateMessage)
     .delete(deleteMessage)

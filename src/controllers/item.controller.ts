@@ -22,7 +22,7 @@ export const addItem = async (req: Request, res: Response) => {
     }
 
     try {
-        Item.add({
+        await Item.add({
             roomId: Number(req.params.roomId),
             name: req.body.name,
         })

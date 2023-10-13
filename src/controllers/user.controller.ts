@@ -27,7 +27,7 @@ export const addUser = async (req: Request, res: Response) => {
     const { email, password, firstName, lastName } = req.body
 
     try {
-        User.add({ email, password, firstName, lastName } as IUser)
+        await User.add({ email, password, firstName, lastName } as IUser)
 
         res.status(httpStatusCodes.CREATED).json({
             message: "Successfully created a user.",

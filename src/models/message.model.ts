@@ -22,6 +22,7 @@ export class Message {
             INSERT INTO message (room_id, user_id, text, posting_date)
             VALUES (?, ?, ?, ?);
         `
+
         await pool.execute(sql, [roomId, userId, text, currentDate])
     }
 
