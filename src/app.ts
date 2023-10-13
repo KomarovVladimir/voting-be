@@ -1,12 +1,10 @@
 import "module-alias/register"
 import express from "express"
 import cors from "cors"
-import { Request, Response, NextFunction } from "express"
 import "express-async-errors"
 
 import { usersRouter } from "@routes/user.router"
 import { roomsRouter } from "@routes/room.router"
-import { BaseError } from "@utils/baseError"
 import {
     errorHandler,
     isOperationalError,
