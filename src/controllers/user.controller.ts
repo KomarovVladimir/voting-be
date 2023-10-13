@@ -3,33 +3,25 @@ import { values, some, isNil } from "lodash"
 
 import { IUser, User } from "@models/user.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
+import { InternalServerError } from "@utils/internalServerError"
+import { BadRequestError } from "@utils/badRequestError"
+import { Api404Error } from "@utils/api404Error"
 
 //TODO: Work on responses
 export const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await User.getAll()
 
-        res.send({
-            statusCode: httpStatusCodes.OK,
-            statusMessage: "Ok",
-            message: "Successfully retrieved all the users.",
-        }).json(users)
+        res.status(httpStatusCodes.OK).json(users)
     } catch (err) {
-        console.error(err)
-
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
+//TODO: Update the validation
 export const addUser = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
-        return res.status(httpStatusCodes.BAD_REQUEST).send({
-            statusCode: httpStatusCodes.BAD_REQUEST,
-            statusMessage: "Bad Request",
-        })
+        throw new BadRequestError("Error")
     }
 
     const { email, password, firstName, lastName } = req.body
@@ -37,16 +29,11 @@ export const addUser = async (req: Request, res: Response) => {
     try {
         User.add({ email, password, firstName, lastName } as IUser)
 
-        res.status(201).send({
-            statusCode: 201,
-            statusMessage: "Created",
+        res.status(httpStatusCodes.CREATED).json({
             message: "Successfully created a user.",
         })
     } catch (err) {
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
@@ -54,10 +41,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id, email, password, firstName, lastName } = req.body
 
     if (some(values(req.body), isNil)) {
-        return res.status(httpStatusCodes.BAD_REQUEST).send({
-            statusCode: httpStatusCodes.BAD_REQUEST,
-            statusMessage: "Bad Request",
-        })
+        throw new BadRequestError("Error")
     }
 
     try {
@@ -69,17 +53,11 @@ export const updateUser = async (req: Request, res: Response) => {
             lastName,
         } as IUser)
 
-        return res.status(202).send({
-            statusCode: 202,
-            statusMessage: "Accepted",
+        return res.status(httpStatusCodes.ACCEPTED).json({
             message: "Successfully updated a user.",
         })
     } catch (err) {
-        console.log(err)
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
@@ -89,16 +67,11 @@ export const deleteUser = async (req: Request, res: Response) => {
     try {
         await User.deleteById(id)
 
-        res.send({
-            statusCode: httpStatusCodes.OK,
-            statusMessage: "Ok",
+        res.status(httpStatusCodes.OK).json({
             message: "Successfully deleted a user.",
         })
     } catch (err) {
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
@@ -110,37 +83,28 @@ export const login = async (
         const { email, password } = req.body
         const user = (await User.findByEmail(email)) as IUser
 
+        if (!user) {
+            throw new Api404Error("Error")
+        }
+
         if (user.password === password) {
-            res.json(user)
+            res.status(httpStatusCodes.OK).json(user)
         } else {
-            res.status(401).send({
-                statusCode: 401,
+            res.status(httpStatusCodes.UNAUTHORIZED).json({
                 statusMessage: "Wrong password.",
             })
         }
     } catch (err) {
-        console.error(err)
-
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
 export const logout = async (req: Request, res: Response) => {
     try {
-        res.send({
-            statusCode: httpStatusCodes.OK,
-            statusMessage: "Ok",
+        res.status(httpStatusCodes.OK).json({
             message: "Successfully logged out.",
         })
     } catch (err) {
-        console.error(err)
-
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }

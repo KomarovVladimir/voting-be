@@ -3,6 +3,7 @@ import { isNil } from "lodash"
 
 import { Message, IMessage } from "@models/message.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
+import { InternalServerError } from "@utils/internalServerError"
 
 //TODO: Optimize error handling
 //TODO: Test the existing codebase
@@ -10,20 +11,15 @@ export const getMessages = async (req: Request, res: Response) => {
     try {
         const messages = await Message.getAll(req.params.roomId)
 
-        res.json(messages)
+        res.status(httpStatusCodes.OK).json(messages)
     } catch (err) {
-        console.error(err)
-
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
 export const addMessage = async (req: Request, res: Response) => {
     if (isNil(req.body.text)) {
-        return res.status(httpStatusCodes.BAD_REQUEST).send({
+        return res.status(httpStatusCodes.BAD_REQUEST).json({
             statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
@@ -36,22 +32,19 @@ export const addMessage = async (req: Request, res: Response) => {
             text: req.body.text,
         })
 
-        res.status(201).send({
+        res.status(201).json({
             statusCode: 201,
             statusMessage: "Created",
             message: "Successfully posted a message.",
         })
     } catch (err) {
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
 export const updateMessage = async (req: Request, res: Response) => {
     if (isNil(req.body.text)) {
-        return res.status(httpStatusCodes.BAD_REQUEST).send({
+        return res.status(httpStatusCodes.BAD_REQUEST).json({
             statusCode: httpStatusCodes.BAD_REQUEST,
             statusMessage: "Bad Request",
         })
@@ -60,17 +53,13 @@ export const updateMessage = async (req: Request, res: Response) => {
     try {
         await Message.updateById(req.body as IMessage)
 
-        return res.status(202).send({
+        return res.status(httpStatusCodes.ACCEPTED).json({
             statusCode: 202,
             statusMessage: "Accepted",
             message: "Successfully updated a message.",
         })
     } catch (err) {
-        console.log(err)
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }
 
@@ -80,15 +69,10 @@ export const deleteMessage = async (req: Request, res: Response) => {
     try {
         await Message.deleteById(id)
 
-        res.send({
-            statusCode: httpStatusCodes.OK,
-            statusMessage: "Ok",
+        res.status(httpStatusCodes.OK).json({
             message: "Successfully deleted an item.",
         })
     } catch (err) {
-        res.status(httpStatusCodes.INTERNAL_SERVER).send({
-            statusCode: httpStatusCodes.INTERNAL_SERVER,
-            statusMessage: "Internal Server Error",
-        })
+        throw new InternalServerError("Error")
     }
 }

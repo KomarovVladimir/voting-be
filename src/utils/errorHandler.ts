@@ -33,14 +33,14 @@ export const errorHandler = (
     next: NextFunction
 ) => {
     if (err instanceof BaseError) {
-        res.status(err.statusCode).send({
+        res.status(err.statusCode).json({
             error: { message: err.message, timestamp: err.timestamp },
         })
     } else {
         const { statusCode, message, timestamp } = new InternalServerError(
             "Error"
         )
-        res.status(statusCode).send({
+        res.status(statusCode).json({
             error: { message, timestamp },
         })
     }
