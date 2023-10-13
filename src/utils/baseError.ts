@@ -3,6 +3,7 @@ export class BaseError extends Error {
     readonly message: string
     readonly statusCode: number
     readonly isOperational: boolean
+    readonly timestamp: string
 
     constructor(
         name: string,
@@ -18,6 +19,7 @@ export class BaseError extends Error {
         this.statusCode = statusCode
         this.statusCode = statusCode
         this.isOperational = isOperational
+        this.timestamp = new Date().toISOString()
 
         Error.captureStackTrace(this)
     }

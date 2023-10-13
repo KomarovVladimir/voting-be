@@ -5,7 +5,12 @@ import cors from "cors"
 import { usersRouter } from "@routes/user.router"
 import { roomsRouter } from "@routes/room.router"
 import { BaseError } from "@utils/baseError"
-import { isOperationalError, logError } from "@utils/errorHandler"
+import {
+    errorHandler,
+    isOperationalError,
+    logError,
+    logErrorMiddleware,
+} from "@utils/errorHandler"
 
 //TODO: Update the cors
 export const app = express()
@@ -29,6 +34,8 @@ app.use(
 )
 
 app.use(express.json())
+app.use(logErrorMiddleware)
+app.use(errorHandler)
 
 app.use("/api/users", usersRouter)
 app.use("/api/rooms", roomsRouter)
