@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 
 import { BaseError } from "./baseError"
-import { InternalServerError } from "./internalServerError"
+import { httpStatusCodes } from "@common/httpStatusCodes"
 
 //TODO: Replace with an actual logger
 export function logError(err: Error | BaseError) {
@@ -37,11 +37,8 @@ export const errorHandler = (
             error: { message: err.message, timestamp: err.timestamp },
         })
     } else {
-        const { statusCode, message, timestamp } = new InternalServerError(
-            "Error"
-        )
-        res.status(statusCode).json({
-            error: { message, timestamp },
+        res.status(httpStatusCodes.INTERNAL_SERVER).json({
+            message: "Internal server error",
         })
     }
 
