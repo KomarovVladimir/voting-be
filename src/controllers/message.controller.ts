@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { isNil } from "lodash"
+import { isNil, some, values } from "lodash"
 
 import { Message, IMessage } from "@models/message.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
@@ -19,22 +19,12 @@ export const getMessages = async (req: Request, res: Response) => {
 }
 
 export const addMessage = async (req: Request, res: Response) => {
-    if (isNil(req.body.text)) {
+    if (some(values(req.body), isNil)) {
         throw new BadRequestError("Error")
     }
 
     try {
-        console.log({
-            roomId: Number(req.params.roomId),
-            userId: req.body.userId,
-            text: req.body.text,
-        })
-
-        await Message.add({
-            roomId: Number(req.params.roomId),
-            userId: req.body.userId,
-            text: req.body.text,
-        })
+        await Message.add({ roomId: req.params.roomId, ...req.body })
 
         res.status(httpStatusCodes.CREATED).json({
             message: "Successfully posted a message.",

@@ -1,3 +1,5 @@
+import moment from "moment"
+
 import { pool } from "../database/mysql.db"
 
 export interface IMessage {
@@ -6,7 +8,7 @@ export interface IMessage {
     userId: number
     text: string
     postingDate: Date
-    updatingDate: Date
+    lastUpdate: Date
 }
 
 //TODO: Update the return types
@@ -16,14 +18,15 @@ export class Message {
         roomId,
         userId,
         text,
-    }: Pick<IMessage, "roomId" | "userId" | "text">) {
-        const currentDate = Date.now()
+        postingDate,
+    }: Pick<IMessage, "roomId" | "userId" | "text" | "postingDate">) {
+        const mysqlTimestamp = moment(postingDate).format("YYYY-MM-DD HH:mm:ss")
         const sql = `
             INSERT INTO message (room_id, user_id, text, created)
             VALUES (?, ?, ?, ?);
         `
 
-        await pool.execute(sql, [roomId, userId, text, currentDate])
+        await pool.execute(sql, [roomId, userId, text, mysqlTimestamp])
     }
 
     static async getAll(roomId: string) {
