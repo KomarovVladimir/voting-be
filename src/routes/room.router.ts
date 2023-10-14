@@ -23,14 +23,10 @@ import {
 export const roomsRouter = Router()
 
 //Rooms manages
-roomsRouter.route("/api/rooms/").get(getRooms).post(addRoom)
+roomsRouter.route("/api/rooms").get(getRooms).post(addRoom).delete(deleteRoom)
 
 //Room
-roomsRouter
-    .route("/api/rooms/:roomId")
-    .get(getRoomById)
-    .patch(updateRoom)
-    .delete(deleteRoom)
+roomsRouter.route("/api/rooms/:roomId").get(getRoomById).patch(updateRoom)
 
 //Room items
 roomsRouter.route("/api/rooms/:roomId/items").get(getItems).post(addItem)
