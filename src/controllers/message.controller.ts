@@ -24,6 +24,12 @@ export const addMessage = async (req: Request, res: Response) => {
     }
 
     try {
+        console.log({
+            roomId: Number(req.params.roomId),
+            userId: req.body.userId,
+            text: req.body.text,
+        })
+
         await Message.add({
             roomId: Number(req.params.roomId),
             userId: req.body.userId,

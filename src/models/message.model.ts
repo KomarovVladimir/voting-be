@@ -19,7 +19,7 @@ export class Message {
     }: Pick<IMessage, "roomId" | "userId" | "text">) {
         const currentDate = Date.now()
         const sql = `
-            INSERT INTO message (room_id, user_id, text, posting_date)
+            INSERT INTO message (room_id, user_id, text, created)
             VALUES (?, ?, ?, ?);
         `
 

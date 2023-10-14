@@ -87,8 +87,14 @@ export const login = async (
             throw new Api404Error("Error")
         }
 
+        console.log(user)
+
         if (user.password === password) {
-            res.status(httpStatusCodes.OK).json(user)
+            res.status(httpStatusCodes.OK).json({
+                id: user.id,
+                email: user.email,
+                password: user.password,
+            })
         } else {
             res.status(httpStatusCodes.UNAUTHORIZED).json({
                 statusMessage: "Wrong password.",
