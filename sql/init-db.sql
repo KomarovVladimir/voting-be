@@ -25,9 +25,15 @@ CREATE TABLE user (
 #============================== room ==============================
 CREATE TABLE room (
 	id INT NOT NULL AUTO_INCREMENT,
+    owner_id INT NOT NULL,
     name VARCHAR(255),
 	status ENUM("Pending", "Active", "Completed"),
-	PRIMARY KEY (id)
+	created TIMESTAMP,
+	last_updated TIMESTAMP,
+	PRIMARY KEY (id),
+    FOREIGN KEY (owner_id) REFERENCES user(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 #============================== item ==============================
@@ -80,11 +86,11 @@ VALUES
 	("test2@email.com", "testpassword123123", "Name 2", "Surname 2"),
 	("test3@email.com", "testpassword123123", "Name 3", "Surname 3");
 
-INSERT INTO room (name, status)
+INSERT INTO room (owner_id, name, status)
 VALUES
-	("Room 1", "Pending"),
-    ("Room 2", "Active"),
-    ("Room 3", "Completed");
+	(1, "Room 1", "Pending"),
+    (1, "Room 2", "Active"),
+    (2, "Room 3", "Completed");
 
 INSERT INTO item (name, room_id, votes)
 VALUES

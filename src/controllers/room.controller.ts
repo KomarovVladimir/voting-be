@@ -27,14 +27,12 @@ export const getRoomById = async (req: Request, res: Response) => {
 }
 
 export const addRoom = async (req: Request, res: Response) => {
-    if (isNil(req.body.name)) {
+    if (isNil(req.body)) {
         throw new BadRequestError("Error")
     }
 
-    const { name } = req.body
-
     try {
-        Room.add(name)
+        await Room.add(req.body)
 
         res.status(httpStatusCodes.CREATED).json({
             message: "Successfully created a room.",

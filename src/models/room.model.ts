@@ -1,18 +1,38 @@
+import moment from "moment"
+
+import { roomStatuses } from "@common/roomStatuses"
+
 import { pool } from "../database/mysql.db"
 
 export interface IRoom {
     id: number
+    userId: number
     name: string
     status: string
+    creationDate: Date
+    lastUpdate: Date
 }
 
 export class Room {
-    static async add(name: string) {
+    static async add({
+        userId,
+        name,
+        creationDate,
+    }: Pick<IRoom, "userId" | "name" | "creationDate">) {
+        const mysqlTimestamp = moment(creationDate).format(
+            "YYYY-MM-DD HH:mm:ss"
+        )
         const sql = `
-            INSERT INTO user (name)
-            VALUES(?);
+            INSERT INTO room (owner_id, name, created, status)
+            VALUES(?, ?, ?, ?);
         `
-        await pool.execute(sql, [name])
+
+        await pool.execute(sql, [
+            userId,
+            name,
+            mysqlTimestamp,
+            roomStatuses.PENDING,
+        ])
     }
 
     static async getAll() {

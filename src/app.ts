@@ -15,16 +15,16 @@ import {
 //TODO: Update the cors
 export const app = express()
 
-process.on("uncaughtException", (error) => {
-    logError(error)
+process.on("uncaughtException", (err) => {
+    logError(err)
 
-    if (!isOperationalError(error)) {
+    if (!isOperationalError(err)) {
         process.exit(1)
     }
 })
 
-process.on("unhandledRejection", (error) => {
-    throw error
+process.on("unhandledRejection", (err) => {
+    throw err
 })
 
 app.use(
