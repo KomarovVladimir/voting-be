@@ -36,7 +36,10 @@ export class Room {
     }
 
     static async getAll() {
-        const sql = "SELECT * FROM room;"
+        const sql = `
+            SELECT id, owner_id ownerId, name, status
+            FROM room;
+        `
         const [result] = await pool.execute(sql)
 
         return result

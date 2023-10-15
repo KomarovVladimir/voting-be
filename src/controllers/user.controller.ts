@@ -87,8 +87,6 @@ export const login = async (
             throw new Api404Error("Error")
         }
 
-        console.log(user)
-
         if (user.password === password) {
             res.status(httpStatusCodes.OK).json({
                 id: user.id,
