@@ -76,12 +76,12 @@ export const updateRoom = async (req: Request, res: Response) => {
 //TODO: Add status messages
 //TODO: Add error names message
 export const deleteRoom = async (req: Request, res: Response) => {
-    if (!req.body.id) {
+    if (!req.params.roomId) {
         throw new BadRequestError("Error")
     }
 
     try {
-        await Room.deleteById(req.body.id)
+        await Room.deleteById(Number(req.params.roomId))
 
         res.status(httpStatusCodes.OK).json({
             message: "Successfully deleted a room.",

@@ -54,14 +54,15 @@ export class Room {
 
     static async getByUser(userId: number) {
         const sql = `
-            SELECT * FROM room
-            INNER JOIN roomUser
-            ON room.id = roomUser.room_id
+            SELECT DISTINCT room.id, room.name, room.owner_id ownerId, room.status FROM room
             INNER JOIN user
+            ON room.owner_id = user.id
+            LEFT JOIN roomUser
             ON roomUser.user_id = user.id
-            WHERE user.id = ?;
+            WHERE room.owner_id = ? AND user.id = ?;
         `
-        const [result] = await pool.execute(sql, [userId])
+
+        const [result] = await pool.execute(sql, [userId, userId])
 
         return result
     }
