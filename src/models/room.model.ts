@@ -55,11 +55,11 @@ export class Room {
     static async getByUser(userId: number) {
         const sql = `
             SELECT DISTINCT room.id, room.name, room.owner_id ownerId, room.status FROM room
-            INNER JOIN user
-            ON room.owner_id = user.id
             LEFT JOIN roomUser
+            ON room.id = roomUser.room_id
+            LEFT JOIN user
             ON roomUser.user_id = user.id
-            WHERE room.owner_id = ? AND user.id = ?;
+            WHERE room.owner_id = ? OR user.id = ?;
         `
 
         const [result] = await pool.execute(sql, [userId, userId])
@@ -92,6 +92,8 @@ export class Room {
     }
 
     static async leaveRoom({ roomId, userId }: Record<string, number>) {
+        console.log(roomId, userId)
+
         const sql = `
             DELETE FROM roomUser
             WHERE room_id = ? AND user_id = ?;

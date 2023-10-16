@@ -92,12 +92,17 @@ export const deleteRoom = async (req: Request, res: Response) => {
 }
 
 export const joinRoom = async (req: Request, res: Response) => {
-    if (some(values(req.body), isNil)) {
+    if (some(values(req.params), isNil)) {
         throw new BadRequestError("Error")
     }
 
     try {
-        await Room.joinRoom(req.body)
+        const params = {
+            roomId: Number(req.params.roomId),
+            userId: Number(req.params.userId),
+        }
+
+        await Room.joinRoom(params)
 
         res.status(httpStatusCodes.OK).json({
             message: "Successfully joined a room.",
