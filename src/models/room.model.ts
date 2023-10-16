@@ -66,4 +66,22 @@ export class Room {
 
         await pool.execute(sql, [id])
     }
+
+    static async joinRoom({ roomId, userId }: Record<string, number>) {
+        const sql = `
+            INSERT INTO roomUser (room_id, user_id)
+            VALUES (?, ?);
+        `
+
+        await pool.execute(sql, [roomId, userId])
+    }
+
+    static async leaveRoom({ roomId, userId }: Record<string, number>) {
+        const sql = `
+            DELETE FROM roomUser
+            WHERE room_id = ? AND user_id = ?;
+        `
+
+        await pool.execute(sql, [roomId, userId])
+    }
 }

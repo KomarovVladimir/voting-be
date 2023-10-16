@@ -47,10 +47,8 @@ export const updateRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const { id, name, status } = req.body
-
     try {
-        await Room.updateById({ id, name, status } as IRoom)
+        await Room.updateById(req.body as IRoom)
 
         return res.status(httpStatusCodes.ACCEPTED).json({
             message: "Successfully updated a user.",
@@ -65,7 +63,7 @@ export const updateRoom = async (req: Request, res: Response) => {
 //TODO: Add error names message
 export const deleteRoom = async (req: Request, res: Response) => {
     if (!req.body.id) {
-        throw new InternalServerError("Error")
+        throw new BadRequestError("Error")
     }
 
     try {
@@ -73,6 +71,38 @@ export const deleteRoom = async (req: Request, res: Response) => {
 
         res.status(httpStatusCodes.OK).json({
             message: "Successfully deleted a room.",
+        })
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}
+
+export const joinRoom = async (req: Request, res: Response) => {
+    if (some(values(req.body), isNil)) {
+        throw new BadRequestError("Error")
+    }
+
+    try {
+        await Room.joinRoom(req.body)
+
+        res.status(httpStatusCodes.OK).json({
+            message: "Successfully joined a room.",
+        })
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}
+
+export const leaveRoom = async (req: Request, res: Response) => {
+    if (some(values(req.body), isNil)) {
+        throw new BadRequestError("Error")
+    }
+
+    try {
+        await Room.leaveRoom(req.body)
+
+        res.status(httpStatusCodes.OK).json({
+            message: "Successfully leaved a room.",
         })
     } catch (err) {
         throw new InternalServerError("Error")
