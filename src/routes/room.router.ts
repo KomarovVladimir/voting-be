@@ -6,6 +6,8 @@ import {
     addRoom,
     updateRoom,
     deleteRoom,
+    joinRoom,
+    leaveRoom,
 } from "@controllers/room.controller"
 import {
     getItems,
@@ -22,25 +24,37 @@ import {
 
 export const roomsRouter = Router()
 
-//Rooms manages
-roomsRouter.route("/api/rooms").get(getRooms).post(addRoom).delete(deleteRoom)
+//TODO: update the routes
+//Rooms manager
+roomsRouter.route("/api/rooms").get(getRooms)
 
 //Room
-roomsRouter.route("/api/rooms/:roomId").get(getRoomById).patch(updateRoom)
+roomsRouter.route("/api/room").post(addRoom)
 
-//Room items
-roomsRouter.route("/api/rooms/:roomId/items").get(getItems).post(addItem)
 roomsRouter
-    .route("/api/rooms/:roomId/items/:id")
+    .route("/api/room/:roomId")
+    .get(getRoomById)
+    .patch(updateRoom)
+    .delete(deleteRoom)
+
+roomsRouter.route("/api/room/:roomId/join").post(joinRoom).delete(leaveRoom)
+
+//Items
+roomsRouter.route("/api/room/:roomId/items").get(getItems)
+
+roomsRouter.route("/api/room/:roomId/item").post(addItem)
+
+roomsRouter
+    .route("/api/room/:roomId/item/:id")
     .put(updateItem)
     .delete(deleteItem)
 
 //Messages
+roomsRouter.route("/api/room/:roomId/messages").get(getMessages)
+
+roomsRouter.route("/api/room/:roomId/message").post(addMessage)
+
 roomsRouter
-    .route("/api/rooms/:roomId/messages")
-    .get(getMessages)
-    .post(addMessage)
-roomsRouter
-    .route("/api/rooms/:roomId/messages/:id")
+    .route("/api/room/:roomId/message/:id")
     .put(updateMessage)
     .delete(deleteMessage)
