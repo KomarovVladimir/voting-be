@@ -52,6 +52,17 @@ export class Room {
         return Array.isArray(result) ? (result[0] as IRoom) : result
     }
 
+    static async getByUser(userId: number) {
+        const sql = `
+            SELECT * FROM room
+            INNER JOIN roomUser
+            WHERE room.id = roomUser.roomId AND userId = ?;
+        `
+        const [result] = await pool.execute(sql, userId)
+
+        return Array.isArray(result) ? (result[0] as IRoom) : result
+    }
+
     static async updateById({ id, name, status }: IRoom) {
         const sql = `
             UPDATE room

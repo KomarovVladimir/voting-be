@@ -8,6 +8,7 @@ import {
     deleteRoom,
     joinRoom,
     leaveRoom,
+    getUserRooms,
 } from "@controllers/room.controller"
 import {
     getItems,
@@ -26,7 +27,9 @@ export const roomsRouter = Router()
 
 //TODO: update the routes
 //Rooms manager
-roomsRouter.route("/api/rooms").get(getRooms)
+roomsRouter.route("/api/rooms").get(getRooms).get(getUserRooms)
+
+roomsRouter.route("/api/user/:userId/rooms").get(getUserRooms)
 
 //Room
 roomsRouter.route("/api/room").post(addRoom)
