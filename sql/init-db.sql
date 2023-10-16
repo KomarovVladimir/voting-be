@@ -90,7 +90,11 @@ INSERT INTO room (owner_id, name, status)
 VALUES
 	(1, "Room 1", "Pending"),
     (1, "Room 2", "Active"),
-    (2, "Room 3", "Completed");
+    (1, "Room 3", "Pending"),
+    (1, "Room 4", "Active"),
+    (2, "Room 5", "Pending"),
+    (2, "Room 6", "Active"),
+    (3, "Room 7", "Completed");
 
 INSERT INTO item (name, room_id, votes)
 VALUES
@@ -106,8 +110,22 @@ VALUES
 
 INSERT INTO roomUser (room_id, user_id)
 VALUES
-	(2, 1),
-    (2, 2);
+	(1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 1),
+    (5, 2),
+    (6, 2),
+    (7, 3);
+    
+    
+INSERT INTO room (owner_id, name, status)
+VALUES
+	(3, "Room3213", "Pending");
+    
+INSERT INTO roomUser (room_id, user_id)
+VALUES
+	(15, 1);
 
 #============================== selects ==============================
 SELECT * FROM user;
@@ -120,5 +138,9 @@ SELECT * FROM message;
 
 SELECT * FROM roomUser;
 
-SELECT * FROM user INNER JOIN roomUser
-WHERE user.id = roomUser.user_id;
+SELECT DISTINCT room.id, room.name, room.owner_id, room.status FROM room
+INNER JOIN user
+ON room.owner_id = user.id
+LEFT JOIN roomUser
+ON roomUser.user_id = user.id
+WHERE room.owner_id = 1 OR user.id = 1;
