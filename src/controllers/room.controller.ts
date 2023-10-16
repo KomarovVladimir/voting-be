@@ -17,7 +17,7 @@ export const getRooms = async (req: Request, res: Response) => {
 }
 
 export const getUserRooms = async (req: Request, res: Response) => {
-    if (isNil(req.params.userId)) {
+    if (!req.params.userId) {
         throw new BadRequestError("Error")
     }
 
@@ -108,12 +108,17 @@ export const joinRoom = async (req: Request, res: Response) => {
 }
 
 export const leaveRoom = async (req: Request, res: Response) => {
-    if (some(values(req.body), isNil)) {
+    if (some(values(req.params), isNil)) {
         throw new BadRequestError("Error")
     }
 
+    const params = {
+        roomId: Number(req.params.roomId),
+        userId: Number(req.params.userId),
+    }
+
     try {
-        await Room.leaveRoom(req.body)
+        await Room.leaveRoom(params)
 
         res.status(httpStatusCodes.OK).json({
             message: "Successfully leaved a room.",

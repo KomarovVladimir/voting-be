@@ -27,7 +27,7 @@ export const roomsRouter = Router()
 
 //TODO: update the routes
 //Rooms manager
-roomsRouter.route("/api/rooms").get(getRooms).get(getUserRooms)
+roomsRouter.route("/api/rooms").get(getRooms)
 
 roomsRouter.route("/api/user/:userId/rooms").get(getUserRooms)
 
@@ -40,7 +40,10 @@ roomsRouter
     .patch(updateRoom)
     .delete(deleteRoom)
 
-roomsRouter.route("/api/room/:roomId/join").post(joinRoom).delete(leaveRoom)
+roomsRouter
+    .route("/api/room/:roomId/join/:userId")
+    .post(joinRoom)
+    .delete(leaveRoom)
 
 //Items
 roomsRouter.route("/api/room/:roomId/items").get(getItems)
