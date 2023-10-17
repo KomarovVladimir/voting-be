@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS item;
 DROP TABLE IF EXISTS message;
-DROP TABLE IF EXISTS roomUser;
+DROP TABLE IF EXISTS roomMember;
 
 #============================== db ==============================
 CREATE DATABASE voting;
@@ -67,7 +67,7 @@ CREATE TABLE message (
 );
 
 #============================== room-user ==============================
-CREATE TABLE roomUser (
+CREATE TABLE roomMember (
 	room_id INT NOT NULL,
 	user_id INT NOT NULL,
     PRIMARY KEY (room_id, user_id),
@@ -108,7 +108,7 @@ VALUES
     (2, 2, "A message 2"),
     (2, 3, "A message 3");
 
-INSERT INTO roomUser (room_id, user_id)
+INSERT INTO roomMember (room_id, user_id)
 VALUES
 	(1, 1),
     (2, 1),
@@ -123,7 +123,7 @@ INSERT INTO room (owner_id, name, status)
 VALUES
 	(3, "Room3213", "Pending");
     
-INSERT INTO roomUser (room_id, user_id)
+INSERT INTO roomMember (room_id, user_id)
 VALUES
 	(15, 1);
 
@@ -136,11 +136,11 @@ SELECT * FROM item;
 
 SELECT * FROM message;
 
-SELECT * FROM roomUser;
+SELECT * FROM roomMember;
 
 SELECT DISTINCT room.id, room.name, room.owner_id, room.status FROM room
 INNER JOIN user
 ON room.owner_id = user.id
-LEFT JOIN roomUser
-ON roomUser.user_id = user.id
+LEFT JOIN roomMember
+ON roomMember.user_id = user.id
 WHERE room.owner_id = 1 OR user.id = 1;

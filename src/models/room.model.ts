@@ -55,10 +55,10 @@ export class Room {
     static async getByUser(userId: number) {
         const sql = `
             SELECT DISTINCT room.id, room.name, room.owner_id ownerId, room.status FROM room
-            LEFT JOIN roomUser
-            ON room.id = roomUser.room_id
+            LEFT JOIN roomMember
+            ON room.id = roomMember.room_id
             LEFT JOIN user
-            ON roomUser.user_id = user.id
+            ON roomMember.user_id = user.id
             WHERE room.owner_id = ? OR user.id = ?;
         `
 
@@ -84,7 +84,7 @@ export class Room {
 
     static async joinRoom({ roomId, userId }: Record<string, number>) {
         const sql = `
-            INSERT INTO roomUser (room_id, user_id)
+            INSERT INTO roomMember (room_id, user_id)
             VALUES (?, ?);
         `
 
@@ -95,7 +95,7 @@ export class Room {
         console.log(roomId, userId)
 
         const sql = `
-            DELETE FROM roomUser
+            DELETE FROM roomMember
             WHERE room_id = ? AND user_id = ?;
         `
 
