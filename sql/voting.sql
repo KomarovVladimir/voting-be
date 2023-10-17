@@ -1,12 +1,5 @@
 USE voting;
 
-DROP DATABASE IF EXISTS voting;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS room;
-DROP TABLE IF EXISTS item;
-DROP TABLE IF EXISTS message;
-DROP TABLE IF EXISTS roomMember;
-
 #============================== db ==============================
 CREATE DATABASE voting;
 
@@ -79,45 +72,6 @@ CREATE TABLE roomMember (
         ON UPDATE CASCADE
 );
 
-#============================== inserts ==============================
-INSERT INTO user (email, password, first_name, last_name)
-VALUES
-	("test@email.com", "testpassword123123", "Name 1", "Surname 1"),
-	("test2@email.com", "testpassword123123", "Name 2", "Surname 2"),
-	("test3@email.com", "testpassword123123", "Name 3", "Surname 3");
-
-INSERT INTO room (owner_id, name, status)
-VALUES
-	(1, "Room 1", "Pending"),
-    (1, "Room 2", "Active"),
-    (1, "Room 3", "Pending"),
-    (1, "Room 4", "Active"),
-    (2, "Room 5", "Pending"),
-    (2, "Room 6", "Active"),
-    (3, "Room 7", "Completed");
-
-INSERT INTO item (name, room_id, votes)
-VALUES
-	("Item 1", 2, 12),
-    ("Item 2", 2, 5),
-    ("Item 3", 2, 54);
-
-INSERT INTO message (room_id, user_id, text)
-VALUES
-	(2, 1, "A message 1"),
-    (2, 2, "A message 2"),
-    (2, 3, "A message 3");
-
-INSERT INTO roomMember (room_id, user_id)
-VALUES
-	(1, 1),
-    (2, 1),
-    (3, 1),
-    (4, 1),
-    (5, 2),
-    (6, 2),
-    (7, 3);
-    
     
 INSERT INTO room (owner_id, name, status)
 VALUES
@@ -126,21 +80,3 @@ VALUES
 INSERT INTO roomMember (room_id, user_id)
 VALUES
 	(15, 1);
-
-#============================== selects ==============================
-SELECT * FROM user;
-
-SELECT * FROM room;
-
-SELECT * FROM item;
-
-SELECT * FROM message;
-
-SELECT * FROM roomMember;
-
-SELECT DISTINCT room.id, room.name, room.owner_id, room.status FROM room
-INNER JOIN user
-ON room.owner_id = user.id
-LEFT JOIN roomMember
-ON roomMember.user_id = user.id
-WHERE room.owner_id = 1 OR user.id = 1;
