@@ -13,6 +13,8 @@ export interface IRoom {
     lastUpdate: Date
 }
 
+//TODO: Split into classes?
+//TODO: Add more specific types
 export class Room {
     static async add({
         userId,
@@ -91,8 +93,6 @@ export class Room {
     }
 
     static async leaveRoom({ roomId, userId }: Record<string, number>) {
-        console.log(roomId, userId)
-
         const sql = `
             DELETE FROM roomMember
             WHERE room_id = ? AND user_id = ?;

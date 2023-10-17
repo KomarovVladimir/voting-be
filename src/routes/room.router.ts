@@ -22,6 +22,7 @@ import {
     getMessages,
     updateMessage,
 } from "@controllers/message.controller"
+import { voteForItem } from "@controllers/vote.controller"
 
 export const roomsRouter = Router()
 
@@ -54,6 +55,10 @@ roomsRouter
     .route("/api/room/:roomId/item/:id")
     .put(updateItem)
     .delete(deleteItem)
+
+roomsRouter
+    .route("/api/room/:roomId/item/:itemId/user/:userId/vote")
+    .post(voteForItem)
 
 //Messages
 roomsRouter.route("/api/room/:roomId/messages").get(getMessages)
