@@ -54,12 +54,11 @@ export class Room {
 
     static async getByUser(userId: number) {
         const sql = `
-            SELECT DISTINCT room.id, room.name, room.owner_id ownerId, room.status FROM room
-            LEFT JOIN roomMember
-            ON room.id = roomMember.room_id
-            LEFT JOIN user
-            ON roomMember.user_id = user.id
-            WHERE room.owner_id = ? OR user.id = ?;
+            SELECT room.id, room.owner_id ownerId, room.name, room.status, concat(first_name, " ", last_name) as authorName
+            FROM room 
+            LEFT JOIN user ON room.owner_id = user.id
+            LEFT JOIN roomMember ON roomMember.room_id = room.id
+            WHERE user.id = ? OR roomMember.user_id = ?;
         `
 
         const [result] = await pool.execute(sql, [userId, userId])
