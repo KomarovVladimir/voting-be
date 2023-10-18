@@ -8,6 +8,7 @@ export interface IItem {
 }
 
 //TODO: Update the return types
+//TODO: Update the params types
 //TODO: Add all the checks
 export class Item {
     static async add({ name, roomId }: Pick<IItem, "name" | "roomId">) {
@@ -23,11 +24,31 @@ export class Item {
             SELECT item.id, item.name, COUNT(vote.user_id) votes
             FROM item
             LEFT JOIN vote
-            ON item.id = vote.item_id
+            ON item.id = vote.item_id AND item.room_id = vote.room_id
             WHERE item.room_id = ?
             GROUP BY item.id;
         `
         const [result] = await pool.execute(sql, [roomId])
+
+        return result
+    }
+
+    static async getVotingData({
+        userId,
+        roomId,
+    }: {
+        userId: number
+        roomId: number
+    }) {
+        const sql = `
+            SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = ? THEN 'True' ELSE 'False' END votedFor
+            FROM item
+            LEFT JOIN vote
+            ON item.id = vote.item_id AND item.room_id = vote.room_id
+            WHERE item.room_id = ?
+            GROUP BY item.id, votedFor;
+        `
+        const [result] = await pool.execute(sql, [userId, roomId])
 
         return result
     }

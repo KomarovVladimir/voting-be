@@ -24,16 +24,4 @@ export class Vote {
 
         await pool.execute(sql, [roomId, userId, itemId])
     }
-
-    static async getUserVoteByRoomId({
-        roomId,
-        userId,
-    }: Pick<IVote, "roomId" | "userId">) {
-        const sql = `
-            SELECT vote.item_id itemId FROM vote
-            WHERE room_id = ? AND user_id = ?;
-        `
-
-        await pool.execute(sql, [roomId, userId])
-    }
 }
