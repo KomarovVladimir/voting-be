@@ -12,14 +12,21 @@ export interface IItem {
 export class Item {
     static async add({ name, roomId }: Pick<IItem, "name" | "roomId">) {
         const sql = `
-            INSERT INTO item (name, votes, room_id)
-            VALUES(?, 0, ?);
+            INSERT INTO item (name, room_id)
+            VALUES(?, ?);
         `
         await pool.execute(sql, [name, roomId])
     }
 
-    static async getAll(roomId: string) {
-        const sql = "SELECT * FROM item WHERE room_id =  ?;"
+    static async getByRoomId(roomId: string) {
+        const sql = `
+            SELECT item.id, item.name, COUNT(vote.user_id) votes
+            FROM item
+            LEFT JOIN vote
+            ON item.id = vote.item_id
+            WHERE item.room_id = ?
+            GROUP BY item.id;
+        `
         const [result] = await pool.execute(sql, [roomId])
 
         return result
@@ -32,13 +39,13 @@ export class Item {
         return result
     }
 
-    static async updateById({ id, name, votes }: IItem) {
+    static async updateById({ id, name }: IItem) {
         const sql = `
             UPDATE item
-            SET name = ?, votes = ?,
+            SET name = ?,
             WHERE id = ?;
         `
-        await pool.execute(sql, [name, votes, id])
+        await pool.execute(sql, [name, id])
     }
 
     static async deleteById(id: number) {

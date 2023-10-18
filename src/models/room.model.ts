@@ -56,7 +56,7 @@ export class Room {
 
     static async getByUser(userId: number) {
         const sql = `
-            SELECT room.id, room.owner_id ownerId, room.name, room.status, concat(first_name, " ", last_name) as authorName
+            SELECT DISTINCT room.id, room.owner_id ownerId, room.name, room.status, concat(first_name, " ", last_name) as authorName
             FROM room 
             LEFT JOIN user ON room.owner_id = user.id
             LEFT JOIN roomMember ON roomMember.room_id = room.id

@@ -8,7 +8,7 @@ import { BadRequestError } from "@utils/badRequestError"
 
 export const getItems = async (req: Request, res: Response) => {
     try {
-        const items = await Item.getAll(req.params.roomId)
+        const items = await Item.getByRoomId(req.params.roomId)
 
         res.status(httpStatusCodes.OK).json(items)
     } catch (err) {
