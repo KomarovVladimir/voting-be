@@ -9,7 +9,7 @@ export interface IVote {
 export class Vote {
     static async vote({ roomId, userId, itemId }: IVote) {
         const sql = `
-            INSERT INTO roomMember (roomId, userId, itemId)
+            INSERT INTO vote (room_id, user_id, item_id)
             VALUES (?, ?, ?);
         `
 
