@@ -48,6 +48,7 @@ roomsRouter
 
 //Items
 roomsRouter.route("/api/room/:roomId/items").get(getItems)
+roomsRouter.route("/api/room/:roomId/items/:userId").get(getVotingData)
 
 roomsRouter.route("/api/room/:roomId/item").post(addItem)
 
