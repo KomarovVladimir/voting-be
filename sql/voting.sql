@@ -72,11 +72,19 @@ CREATE TABLE roomMember (
         ON UPDATE CASCADE
 );
 
-    
-INSERT INTO room (owner_id, name, status)
-VALUES
-	(3, "Room3213", "Pending");
-    
-INSERT INTO roomMember (room_id, user_id)
-VALUES
-	(15, 1);
+#============================== room-user ==============================
+CREATE TABLE vote (
+	room_id INT NOT NULL,
+    item_id INT NOT NULL,
+	user_id INT NOT NULL,
+    PRIMARY KEY (room_id, user_id),
+    FOREIGN KEY (room_id) REFERENCES room(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (item_id) REFERENCES item(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES user(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
