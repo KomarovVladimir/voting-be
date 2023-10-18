@@ -41,12 +41,12 @@ export class Item {
         roomId: number
     }) {
         const sql = `
-            SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = ? THEN 'True' ELSE 'False' END votedFor
+            SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = ? THEN 1 ELSE 0 END voted
             FROM item
             LEFT JOIN vote
             ON item.id = vote.item_id AND item.room_id = vote.room_id
             WHERE item.room_id = ?
-            GROUP BY item.id, votedFor;
+            GROUP BY item.id, voted
         `
         const [result] = await pool.execute(sql, [userId, roomId])
 

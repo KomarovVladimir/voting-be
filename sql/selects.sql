@@ -21,7 +21,7 @@ WHERE item.room_id = 2
 GROUP BY item.id;
 
 -- Items and votes + boolean user id
-SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = 1 THEN 'True' ELSE 'False' END voted
+SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = 1 THEN 1 ELSE 0 END voted
 FROM item
 LEFT JOIN vote
 ON item.id = vote.item_id AND item.room_id = vote.room_id

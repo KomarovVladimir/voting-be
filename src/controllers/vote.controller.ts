@@ -35,7 +35,7 @@ export const downvote = async (req: Request, res: Response) => {
         const params = {
             roomId: Number(req.params.roomId),
             userId: Number(req.params.userId),
-            itemId: Number(req.params.userId),
+            itemId: Number(req.params.itemId),
         }
 
         const rooms = await Vote.downvote(params)
