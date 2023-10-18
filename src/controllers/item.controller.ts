@@ -64,3 +64,23 @@ export const deleteItem = async (req: Request, res: Response) => {
         throw new InternalServerError("Error")
     }
 }
+
+//TODO: Rename
+export const getVotingData = async (req: Request, res: Response) => {
+    if (some(values(req.body), isNil)) {
+        throw new BadRequestError("Error")
+    }
+
+    try {
+        const params = {
+            roomId: Number(req.params.roomId),
+            userId: Number(req.params.userId),
+        }
+
+        const votes = await Item.getVotingData(params)
+
+        res.status(httpStatusCodes.OK).json(votes)
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}
