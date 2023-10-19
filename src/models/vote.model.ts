@@ -10,10 +10,11 @@ export class Vote {
     static async add({ roomId, userId, itemId }: IVote) {
         const sql = `
             INSERT INTO vote (room_id, user_id, item_id)
-            VALUES (?, ?, ?);
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE item_id = ?;
         `
 
-        await pool.execute(sql, [roomId, userId, itemId])
+        await pool.execute(sql, [roomId, userId, itemId, itemId])
     }
 
     static async delete({ roomId, userId, itemId }: IVote) {

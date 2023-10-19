@@ -33,7 +33,6 @@ VALUES
     (6, 1),
     (7, 1);
     
-    
 INSERT INTO room (owner_id, name, status)
 VALUES
 	(3, "Room3213", "Pending");
@@ -41,3 +40,12 @@ VALUES
 INSERT INTO roomMember (room_id, user_id)
 VALUES
 	(15, 1);
+
+-- Do nothing if exists
+INSERT INTO vote (room_id, user_id, item_id)
+VALUES (2, 3, 1)
+ON DUPLICATE KEY UPDATE item_id = item_id;
+
+-- Do nothing if exists
+INSERT INTO vote (room_id, user_id, item_id)
+VALUES (2, 1, 2);
