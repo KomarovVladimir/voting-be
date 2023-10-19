@@ -7,7 +7,7 @@ export interface IVote {
 }
 
 export class Vote {
-    static async vote({ roomId, userId, itemId }: IVote) {
+    static async add({ roomId, userId, itemId }: IVote) {
         const sql = `
             INSERT INTO vote (room_id, user_id, item_id)
             VALUES (?, ?, ?);
@@ -16,7 +16,7 @@ export class Vote {
         await pool.execute(sql, [roomId, userId, itemId])
     }
 
-    static async downvote({ roomId, userId, itemId }: IVote) {
+    static async delete({ roomId, userId, itemId }: IVote) {
         const sql = `
             DELETE FROM vote
             WHERE room_id = ? AND user_id = ? AND item_id = ?;

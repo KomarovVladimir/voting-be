@@ -18,7 +18,7 @@ export const vote = async (req: Request, res: Response) => {
             itemId: Number(req.params.itemId),
         }
 
-        const rooms = await Vote.vote(params)
+        const rooms = await Vote.add(params)
 
         res.status(httpStatusCodes.OK).json(rooms)
     } catch (err) {
@@ -38,7 +38,7 @@ export const downvote = async (req: Request, res: Response) => {
             itemId: Number(req.params.itemId),
         }
 
-        const rooms = await Vote.downvote(params)
+        const rooms = await Vote.delete(params)
 
         res.status(httpStatusCodes.OK).json(rooms)
     } catch (err) {

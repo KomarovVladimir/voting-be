@@ -33,6 +33,7 @@ export class Item {
         return result
     }
 
+    //TODO: Optimize the query
     static async getVotingData({
         userId,
         roomId,
@@ -41,12 +42,12 @@ export class Item {
         roomId: number
     }) {
         const sql = `
-            SELECT item.id, item.name, COUNT(vote.user_id) votes, CASE WHEN vote.user_id = ? THEN 1 ELSE 0 END voted
+            SELECT item.id, item.name, COUNT(vote.user_id) votes, CAST(SUM(CASE WHEN vote.user_id = ? THEN 1 ELSE 0 END) AS UNSIGNED) voted
             FROM item
             LEFT JOIN vote
             ON item.id = vote.item_id AND item.room_id = vote.room_id
             WHERE item.room_id = ?
-            GROUP BY item.id, voted
+            GROUP BY item.id;
         `
         const [result] = await pool.execute(sql, [userId, roomId])
 
