@@ -8,9 +8,9 @@ import { BadRequestError } from "@utils/badRequestError"
 
 //TODO: Optimize error handling
 //TODO: Test the existing codebase
-export const getMessages = async (req: Request, res: Response) => {
+export const getRoomMessages = async (req: Request, res: Response) => {
     try {
-        const messages = await Message.getAll(req.params.roomId)
+        const messages = await Message.getByRoomId(req.params.roomId)
 
         res.status(httpStatusCodes.OK).json(messages)
     } catch (err) {

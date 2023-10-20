@@ -20,7 +20,7 @@ import {
 import {
     addMessage,
     deleteMessage,
-    getMessages,
+    getRoomMessages,
     updateMessage,
 } from "@controllers/message.controller"
 import { downvote, vote } from "@controllers/vote.controller"
@@ -64,7 +64,7 @@ roomsRouter
     .delete(downvote)
 
 //Messages
-roomsRouter.route("/api/room/:roomId/messages").get(getMessages)
+roomsRouter.route("/api/room/:roomId/messages").get(getRoomMessages)
 
 roomsRouter.route("/api/room/:roomId/message").post(addMessage)
 

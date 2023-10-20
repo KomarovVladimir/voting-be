@@ -49,7 +49,6 @@ CREATE TABLE message (
     created TIMESTAMP,
 	last_updated TIMESTAMP,
     text TEXT,
-    name VARCHAR(255),
 	PRIMARY KEY (id),
     FOREIGN KEY (room_id) REFERENCES room(id)
 		ON DELETE CASCADE

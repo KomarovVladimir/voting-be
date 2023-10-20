@@ -29,8 +29,14 @@ export class Message {
         await pool.execute(sql, [roomId, userId, text, mysqlTimestamp])
     }
 
-    static async getAll(roomId: string) {
-        const sql = "SELECT * FROM message WHERE room_id = ?;"
+    static async getByRoomId(roomId: string) {
+        const sql = `
+            SELECT m.id, text, m.created, m.last_updated lastUpdated, user_id userId, CONCAT(u.first_name, " ", u.last_name) username
+            FROM message AS m
+            LEFT JOIN user AS u
+            ON m.user_id = u.id
+            WHERE room_id = ?;
+        `
         const [result] = await pool.execute(sql, [roomId])
 
         return result

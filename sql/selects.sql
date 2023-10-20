@@ -32,3 +32,13 @@ LEFT JOIN vote
 ON item.id = vote.item_id AND item.room_id = vote.room_id
 WHERE item.room_id = 2
 GROUP BY item.id;
+
+-- Messages
+SELECT id, user_id userId, created, last_updated lastUpdated, text
+FROM message;
+
+-- Messages with usernames
+SELECT m.id, text, m.created, m.last_updated lastUpdated, user_id userId, CONCAT(u.first_name, " ", u.last_name) username
+FROM message AS m
+LEFT JOIN user AS u
+ON m.user_id = u.id;
