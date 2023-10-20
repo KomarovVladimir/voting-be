@@ -27,7 +27,7 @@ VALUES
     (2, 2, "A message 2"),
     (2, 3, "A message 3");
 
-INSERT INTO roomMember (room_id, user_id)
+INSERT INTO room_member (room_id, user_id)
 VALUES
 	(5, 1),
     (6, 1),
@@ -37,7 +37,7 @@ INSERT INTO room (owner_id, name, status)
 VALUES
 	(3, "Room3213", "Pending");
     
-INSERT INTO roomMember (room_id, user_id)
+INSERT INTO room_member (room_id, user_id)
 VALUES
 	(15, 1);
 

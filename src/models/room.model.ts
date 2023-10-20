@@ -56,11 +56,11 @@ export class Room {
 
     static async getByUser(userId: number) {
         const sql = `
-            SELECT DISTINCT room.id, room.owner_id ownerId, room.name, room.status, concat(first_name, " ", last_name) as authorName
-            FROM room 
-            LEFT JOIN user ON room.owner_id = user.id
-            LEFT JOIN roomMember ON roomMember.room_id = room.id
-            WHERE user.id = ? OR roomMember.user_id = ?;
+            SELECT DISTINCT r.id, r.owner_id ownerId, r.name, r.status, concat(first_name, " ", last_name) as authorName
+            FROM room AS r
+            LEFT JOIN user AS u ON r.owner_id = u.id
+            LEFT JOIN room_member AS rm ON rm.room_id = r.id
+            WHERE u.id = ? OR rm.user_id = ?;
         `
 
         const [result] = await pool.execute(sql, [userId, userId])
@@ -85,7 +85,7 @@ export class Room {
 
     static async joinRoom({ roomId, userId }: Record<string, number>) {
         const sql = `
-            INSERT INTO roomMember (room_id, user_id)
+            INSERT INTO room_member (room_id, user_id)
             VALUES (?, ?);
         `
 
@@ -94,8 +94,31 @@ export class Room {
 
     static async leaveRoom({ roomId, userId }: Record<string, number>) {
         const sql = `
-            DELETE FROM roomMember
+            DELETE FROM room_member
             WHERE room_id = ? AND user_id = ?;
+        `
+
+        await pool.execute(sql, [roomId, userId])
+    }
+
+    static async getRoomMembers(roomId: number) {
+        const sql = `
+            SELECT u.id, CONCAT(first_name, " ", last_name) username, email
+            FROM room_member AS rm
+            LEFT JOIN user AS u
+            ON rm.user_id = u.id
+            WHERE rm.room_id = ?;
+        `
+
+        const [result] = await pool.execute(sql, [roomId])
+
+        return result
+    }
+
+    static async excludeMemberById({ roomId, userId }: Record<string, number>) {
+        const sql = `
+            DELETE FROM room_member AS rm
+            WHERE rm.room_id = ? AND rm.user_id = ?;
         `
 
         await pool.execute(sql, [roomId, userId])

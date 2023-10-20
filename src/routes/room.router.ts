@@ -9,6 +9,8 @@ import {
     joinRoom,
     leaveRoom,
     getUserRooms,
+    getRoomMembers,
+    excludeMember,
 } from "@controllers/room.controller"
 import {
     getItems,
@@ -41,6 +43,11 @@ roomsRouter
     .get(getRoomById)
     .patch(updateRoom)
     .delete(deleteRoom)
+
+//Members
+roomsRouter.route("/api/room/:roomId/members").get(getRoomMembers)
+
+roomsRouter.route("/api/room/:roomId/members/:userId").delete(excludeMember)
 
 roomsRouter
     .route("/api/room/:roomId/join/:userId")

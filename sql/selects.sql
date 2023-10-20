@@ -2,12 +2,14 @@ SELECT * FROM user;
 SELECT * FROM room;
 SELECT * FROM item;
 SELECT * FROM vote;
+SELECT * FROM room_member;
 
-SELECT room.id room_id, room.owner_id, roomMember.user_id, concat(first_name, " ", last_name) as authorName
+-- Ger rooms data
+SELECT room.id room_id, room.owner_id, room_member.user_id, concat(first_name, " ", last_name) as authorName
 FROM room 
 LEFT JOIN user ON room.owner_id = user.id
-LEFT JOIN roomMember ON roomMember.room_id = room.id
-WHERE user.id = 1 OR roomMember.user_id = 1;
+LEFT JOIN room_member ON room_member.room_id = room.id
+WHERE user.id = 1 OR room_member.user_id = 1;
 
 -- Items and votes
 SELECT item.id, item.name, COUNT(vote.user_id) votes
@@ -42,3 +44,16 @@ SELECT m.id, text, m.created, m.last_updated lastUpdated, user_id userId, CONCAT
 FROM message AS m
 LEFT JOIN user AS u
 ON m.user_id = u.id;
+
+-- Get room members
+-- TODO: ADD IS ONLINE FIELD
+SELECT u.id, CONCAT(first_name, " ", last_name) username, email
+FROM room_member AS rm
+LEFT JOIN user AS u
+ON rm.user_id = u.id;
+
+SELECT u.id, CONCAT(first_name, " ", last_name) username, email
+FROM room_member AS rm
+LEFT JOIN user AS u
+ON rm.user_id = u.id
+WHERE rm.room_id = 2;

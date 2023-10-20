@@ -132,3 +132,37 @@ export const leaveRoom = async (req: Request, res: Response) => {
         throw new InternalServerError("Error")
     }
 }
+
+export const getRoomMembers = async (req: Request, res: Response) => {
+    if (!req.params.roomId) {
+        throw new BadRequestError("Error")
+    }
+
+    try {
+        const result = await Room.getRoomMembers(Number(req.params.roomId))
+
+        res.status(httpStatusCodes.OK).json(result)
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}
+
+//TODO: Fix params check
+export const excludeMember = async (req: Request, res: Response) => {
+    if (some(values(req.params), isNil)) {
+        throw new BadRequestError("Error")
+    }
+
+    const params = {
+        roomId: Number(req.params.roomId),
+        userId: Number(req.params.userId),
+    }
+
+    try {
+        const result = await Room.excludeMemberById(params)
+
+        res.status(httpStatusCodes.OK).json(result)
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}

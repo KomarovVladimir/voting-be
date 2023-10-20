@@ -59,7 +59,7 @@ CREATE TABLE message (
 );
 
 #============================== room-user ==============================
-CREATE TABLE roomMember (
+CREATE TABLE room_member (
 	room_id INT NOT NULL,
 	user_id INT NOT NULL,
     PRIMARY KEY (room_id, user_id),
