@@ -4,9 +4,8 @@
     "description": "",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "tsc",
-        "start": "ts-node-esm src/app.ts",
-        "start:dev": "npx nodemon"
+        "build": "ts-node-esm src/app.ts",
+        "start": "npx nodemon"
     },
     "author": "Vladimir Komarov",
     "license": "MIT",
