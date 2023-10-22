@@ -1,3 +1,5 @@
+import { ResultSetHeader } from "mysql2/promise"
+
 import { VoteData } from "types"
 
 import { pool } from "../database/mysql.db"
@@ -10,7 +12,14 @@ export class Vote {
             ON DUPLICATE KEY UPDATE item_id = ?;
         `
 
-        await pool.execute(sql, [roomId, userId, itemId, itemId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+            itemId,
+            itemId,
+        ])
+
+        return result
     }
 
     static async delete({ roomId, userId, itemId }: VoteData) {
@@ -19,6 +28,12 @@ export class Vote {
             WHERE room_id = ? AND user_id = ? AND item_id = ?;
         `
 
-        await pool.execute(sql, [roomId, userId, itemId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+            itemId,
+        ])
+
+        return result
     }
 }

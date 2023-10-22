@@ -1,3 +1,5 @@
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
+
 import { ItemData } from "types"
 
 import { pool } from "../database/mysql.db"
@@ -11,7 +13,12 @@ export class Item {
             INSERT INTO item (name, room_id)
             VALUES(?, ?);
         `
-        await pool.execute(sql, [name, roomId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            name,
+            roomId,
+        ])
+
+        return result
     }
 
     static async getByRoomId(roomId: string) {
@@ -23,9 +30,9 @@ export class Item {
             WHERE item.room_id = ?
             GROUP BY item.id;
         `
-        const [result] = await pool.execute(sql, [roomId])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
 
-        return result
+        return result as ItemData[]
     }
 
     //TODO: Optimize the query
@@ -44,16 +51,19 @@ export class Item {
             WHERE item.room_id = ?
             GROUP BY item.id;
         `
-        const [result] = await pool.execute(sql, [userId, roomId])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [
+            userId,
+            roomId,
+        ])
 
-        return result
+        return result as ItemData[]
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM item WHERE id = ?;`
-        const [result] = await pool.execute(sql, [id])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
 
-        return result
+        return result[0] as ItemData
     }
 
     static async updateById({ id, name }: ItemData) {
@@ -62,12 +72,16 @@ export class Item {
             SET name = ?,
             WHERE id = ?;
         `
-        await pool.execute(sql, [name, id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [name, id])
+
+        return result
     }
 
     static async deleteById(id: number) {
         const sql = "DELETE FROM item WHERE id = ?;"
 
-        await pool.execute(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+
+        return result
     }
 }

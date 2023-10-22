@@ -1,3 +1,4 @@
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import moment from "moment"
 
 import { MessageData } from "types"
@@ -19,7 +20,14 @@ export class Message {
             VALUES (?, ?, ?, ?);
         `
 
-        await pool.execute(sql, [roomId, userId, text, mysqlTimestamp])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+            text,
+            mysqlTimestamp,
+        ])
+
+        return result
     }
 
     static async getByRoomId(roomId: string) {
@@ -30,16 +38,16 @@ export class Message {
             ON m.user_id = u.id
             WHERE room_id = ?;
         `
-        const [result] = await pool.execute(sql, [roomId])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
 
-        return result
+        return result as MessageData[]
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM message WHERE id = ?;`
-        const [result] = await pool.execute(sql, [id])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
 
-        return result
+        return result[0] as MessageData
     }
 
     static async updateById({ id, text }: Pick<MessageData, "id" | "text">) {
@@ -49,12 +57,20 @@ export class Message {
             SET text = ?, updating_date = ?
             WHERE id = ?;
         `
-        await pool.execute(sql, [text, currentDate, id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            text,
+            currentDate,
+            id,
+        ])
+
+        return result
     }
 
     static async deleteById(id: number) {
         const sql = "DELETE FROM message WHERE id = ?;"
 
-        await pool.execute(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+
+        return result
     }
 }
