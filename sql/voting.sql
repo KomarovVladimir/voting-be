@@ -4,9 +4,10 @@ USE voting;
 CREATE DATABASE voting;
 
 #============================== user ==============================
+ALTER TABLE user ADD UNIQUE (email);
 CREATE TABLE user (
 	id INT NOT NULL AUTO_INCREMENT,
-    email VARCHAR(35),
+    email VARCHAR(35) UNIQUE,
 	password VARCHAR(255),
     first_name VARCHAR(35),
 	last_name VARCHAR(35),

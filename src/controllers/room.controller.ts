@@ -16,20 +16,6 @@ export const getRooms = async (req: Request, res: Response) => {
     }
 }
 
-export const getUserRooms = async (req: Request, res: Response) => {
-    if (!req.params.userId) {
-        throw new BadRequestError("Error")
-    }
-
-    try {
-        const rooms = await Room.getByUser(Number(req.params.userId))
-
-        res.status(httpStatusCodes.OK).json(rooms)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
-}
-
 export const getRoomById = async (req: Request, res: Response) => {
     try {
         const result = await Room.getById(Number(req.params.roomId))

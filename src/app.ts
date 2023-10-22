@@ -3,14 +3,16 @@ import express from "express"
 import cors from "cors"
 import "express-async-errors"
 
-import { usersRouter } from "@routes/user.router"
-import { roomsRouter } from "@routes/room.router"
+// import cookieParser from "cookie-parser"
+
 import {
     errorHandler,
     isOperationalError,
     logError,
     logErrorMiddleware,
 } from "@utils/errorHandler"
+import { apiRouter } from "@routes/apiRouter"
+import cookieParser from "cookie-parser"
 
 //TODO: Update the cors
 export const app = express()
@@ -27,19 +29,19 @@ process.on("unhandledRejection", (err) => {
     throw err
 })
 
+app.use(express.json())
 app.use(
     cors({
-        origin: "*",
+        origin: "http://localhost:3000",
+        credentials: true,
     })
 )
+apiRouter.use(cookieParser())
 
-app.use(express.json())
-
-app.use(usersRouter)
-app.use(roomsRouter)
+app.use("/api/v1", apiRouter)
 
 app.use(logErrorMiddleware)
 app.use(errorHandler)
 
-const port = 5000
+const port = process.env.PORT
 app.listen(port, () => console.log(`Running on port ${port}`))

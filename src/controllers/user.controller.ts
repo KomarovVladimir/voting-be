@@ -6,6 +6,7 @@ import { httpStatusCodes } from "@common/httpStatusCodes"
 import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
 import { Api404Error } from "@utils/api404Error"
+import { Room } from "@models/room.model"
 
 //TODO: Work on responses
 export const getUsers = async (req: Request, res: Response) => {
@@ -108,6 +109,20 @@ export const logout = async (req: Request, res: Response) => {
         res.status(httpStatusCodes.OK).json({
             message: "Successfully logged out.",
         })
+    } catch (err) {
+        throw new InternalServerError("Error")
+    }
+}
+
+export const getUserRooms = async (req: Request, res: Response) => {
+    if (!req.params.userId) {
+        throw new BadRequestError("Error")
+    }
+
+    try {
+        const rooms = await Room.getByUser(Number(req.params.userId))
+
+        res.status(httpStatusCodes.OK).json(rooms)
     } catch (err) {
         throw new InternalServerError("Error")
     }

@@ -8,7 +8,6 @@ import {
     deleteRoom,
     joinRoom,
     leaveRoom,
-    getUserRooms,
     getRoomMembers,
     excludeMember,
 } from "@controllers/room.controller"
@@ -29,53 +28,32 @@ import { downvote, vote } from "@controllers/vote.controller"
 
 export const roomsRouter = Router()
 
-//TODO: update the routes
-//Rooms manager
-roomsRouter.route("/api/rooms").get(getRooms)
-
-roomsRouter.route("/api/user/:userId/rooms").get(getUserRooms)
-
 //Room
-roomsRouter.route("/api/room").post(addRoom)
-
+roomsRouter.route("/").get(getRooms).post(addRoom)
 roomsRouter
-    .route("/api/room/:roomId")
+    .route("/:roomId")
     .get(getRoomById)
     .patch(updateRoom)
     .delete(deleteRoom)
 
 //Members
-roomsRouter.route("/api/room/:roomId/members").get(getRoomMembers)
-
-roomsRouter.route("/api/room/:roomId/members/:userId").delete(excludeMember)
-
-roomsRouter
-    .route("/api/room/:roomId/join/:userId")
-    .post(joinRoom)
-    .delete(leaveRoom)
+roomsRouter.route("/:roomId/members").get(getRoomMembers)
+roomsRouter.route("/:roomId/join/:userId").post(joinRoom).delete(leaveRoom)
+roomsRouter.route("/:roomId/members/:userId/exclude").delete(excludeMember)
 
 //Items
-roomsRouter.route("/api/room/:roomId/items").get(getItems)
-roomsRouter.route("/api/room/:roomId/items/:userId").get(getVotingData)
-
-roomsRouter.route("/api/room/:roomId/item").post(addItem)
-
+//TODO: Rename getVotingData
+roomsRouter.route("/:roomId/items").get(getItems).post(addItem)
+roomsRouter.route("/:roomId/items/:id").put(updateItem).delete(deleteItem)
+roomsRouter.route("/:roomId/user/:userId/items").get(getVotingData)
 roomsRouter
-    .route("/api/room/:roomId/item/:id")
-    .put(updateItem)
-    .delete(deleteItem)
-
-roomsRouter
-    .route("/api/room/:roomId/item/:itemId/user/:userId/vote")
+    .route("/:roomId/users/:userId/items/:itemId/vote")
     .post(vote)
     .delete(downvote)
 
 //Messages
-roomsRouter.route("/api/room/:roomId/messages").get(getRoomMessages)
-
-roomsRouter.route("/api/room/:roomId/message").post(addMessage)
-
+roomsRouter.route("/:roomId/messages").get(getRoomMessages).post(addMessage)
 roomsRouter
-    .route("/api/room/:roomId/message/:id")
+    .route("/:roomId/messages/:id")
     .put(updateMessage)
     .delete(deleteMessage)
