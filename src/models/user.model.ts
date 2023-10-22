@@ -1,3 +1,4 @@
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import { pool } from "../database/mysql.db"
 
 export interface IUser {
@@ -12,13 +13,21 @@ export interface IUser {
 //TODO: Add a timestamp tracking
 //TODO: Update the return types
 export class User {
-    static async add({ email, password, firstName, lastName }: IUser) {
+    static async insert({ email, password, firstName, lastName }: IUser) {
         // const timestamp = new Date().getTime()
         const sql = `
             INSERT INTO user (email, password, first_name, last_name)
             VALUES(?, ?, ?, ?);
         `
-        await pool.execute(sql, [email, password, firstName, lastName])
+
+        const result = await pool.execute<ResultSetHeader>(sql, [
+            email,
+            password,
+            firstName,
+            lastName,
+        ])
+
+        return result[0].insertId
     }
 
     static async getAll() {
@@ -30,7 +39,7 @@ export class User {
 
     static async getById(id: number) {
         const sql = `SELECT * FROM user WHERE id = ?;`
-        const result = await pool.execute(sql, [id])
+        const [result] = await pool.execute(sql, [id])
 
         return result
     }
@@ -58,8 +67,9 @@ export class User {
 
     static async findByEmail(email: string) {
         const sql = `SELECT * FROM user WHERE email = ?;`
-        const [result] = await pool.execute(sql, [email])
 
-        return Array.isArray(result) ? result[0] : result
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [email])
+
+        return result[0]
     }
 }

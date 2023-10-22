@@ -2,8 +2,7 @@ import "module-alias/register"
 import express from "express"
 import cors from "cors"
 import "express-async-errors"
-
-// import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser"
 
 import {
     errorHandler,
@@ -12,7 +11,6 @@ import {
     logErrorMiddleware,
 } from "@utils/errorHandler"
 import { apiRouter } from "@routes/apiRouter"
-import cookieParser from "cookie-parser"
 
 //TODO: Update the cors
 export const app = express()
@@ -33,7 +31,7 @@ app.use(express.json())
 app.use(
     cors({
         origin: "http://localhost:3000",
-        credentials: true,
+        // credentials: true,
     })
 )
 apiRouter.use(cookieParser())

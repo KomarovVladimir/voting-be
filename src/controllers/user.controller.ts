@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
+import jsonwebtoken from "jsonwebtoken"
 
 import { IUser, User } from "@models/user.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
@@ -28,11 +29,29 @@ export const addUser = async (req: Request, res: Response) => {
     const { email, password, firstName, lastName } = req.body
 
     try {
-        await User.add({ email, password, firstName, lastName } as IUser)
+        const user = await User.insert({
+            email,
+            password,
+            firstName,
+            lastName,
+        } as IUser)
 
-        res.status(httpStatusCodes.CREATED).json({
-            message: "Successfully created a user.",
+        const jsontoken = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
+            expiresIn: "30m",
         })
+
+        res.cookie("token", jsontoken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            expires: new Date(Number(new Date()) + 30 * 60 * 1000),
+        })
+            .status(httpStatusCodes.CREATED)
+            .json({
+                token: jsontoken,
+                message: "Successfully created a user.",
+            })
+        // .redirect("/mainpage")
     } catch (err) {
         throw new InternalServerError("Error")
     }
@@ -76,12 +95,14 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 }
 
+//TODO: Prsroperly type query results
 export const login = async (
     req: Request<never, never, Pick<IUser, "email" | "password">>,
     res: Response
 ) => {
     try {
         const { email, password } = req.body
+
         const user = (await User.findByEmail(email)) as IUser
 
         if (!user) {
@@ -92,7 +113,6 @@ export const login = async (
             res.status(httpStatusCodes.OK).json({
                 id: user.id,
                 email: user.email,
-                password: user.password,
             })
         } else {
             res.status(httpStatusCodes.UNAUTHORIZED).json({
