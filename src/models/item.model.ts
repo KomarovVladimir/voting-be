@@ -1,17 +1,12 @@
-import { pool } from "../database/mysql.db"
+import { ItemData } from "types"
 
-export interface IItem {
-    id: number
-    name: string
-    roomId: number
-    votes: number
-}
+import { pool } from "../database/mysql.db"
 
 //TODO: Update the return types
 //TODO: Update the params types
 //TODO: Add all the checks
 export class Item {
-    static async add({ name, roomId }: Pick<IItem, "name" | "roomId">) {
+    static async add({ name, roomId }: Pick<ItemData, "name" | "roomId">) {
         const sql = `
             INSERT INTO item (name, room_id)
             VALUES(?, ?);
@@ -61,7 +56,7 @@ export class Item {
         return result
     }
 
-    static async updateById({ id, name }: IItem) {
+    static async updateById({ id, name }: ItemData) {
         const sql = `
             UPDATE item
             SET name = ?,

@@ -1,15 +1,8 @@
 import moment from "moment"
 
-import { pool } from "../database/mysql.db"
+import { MessageData } from "types"
 
-export interface IMessage {
-    id: number
-    roomId: number
-    userId: number
-    text: string
-    postingDate: Date
-    lastUpdate: Date
-}
+import { pool } from "../database/mysql.db"
 
 //TODO: Update the return types
 //TODO: Add all the checks
@@ -19,7 +12,7 @@ export class Message {
         userId,
         text,
         postingDate,
-    }: Pick<IMessage, "roomId" | "userId" | "text" | "postingDate">) {
+    }: Pick<MessageData, "roomId" | "userId" | "text" | "postingDate">) {
         const mysqlTimestamp = moment(postingDate).format("YYYY-MM-DD HH:mm:ss")
         const sql = `
             INSERT INTO message (room_id, user_id, text, created)
@@ -49,7 +42,7 @@ export class Message {
         return result
     }
 
-    static async updateById({ id, text }: Pick<IMessage, "id" | "text">) {
+    static async updateById({ id, text }: Pick<MessageData, "id" | "text">) {
         const currentDate = Date.now()
         const sql = `
             UPDATE message

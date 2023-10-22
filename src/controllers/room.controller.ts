@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Room, IRoom } from "@models/room.model"
+import { Room } from "@models/room.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
 import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
+import { RoomData } from "types"
 
 export const getRooms = async (req: Request, res: Response) => {
     try {
@@ -48,7 +49,7 @@ export const updateRoom = async (req: Request, res: Response) => {
     }
 
     try {
-        await Room.updateById(req.body as IRoom)
+        await Room.updateById(req.body as RoomData)
 
         return res.status(httpStatusCodes.ACCEPTED).json({
             message: "Successfully updated a user.",

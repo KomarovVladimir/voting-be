@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
 import { isNil, some, values } from "lodash"
 
-import { Message, IMessage } from "@models/message.model"
+import { Message } from "@models/message.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
 import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
+import { MessageData } from "types"
 
 //TODO: Optimize error handling
 //TODO: Test the existing codebase
@@ -43,7 +44,7 @@ export const updateMessage = async (req: Request, res: Response) => {
     }
 
     try {
-        await Message.updateById(req.body as IMessage)
+        await Message.updateById(req.body as MessageData)
 
         return res.status(httpStatusCodes.ACCEPTED).json({
             statusCode: 202,

@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Item, IItem } from "@models/item.model"
+import { Item } from "@models/item.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
 import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
+import { ItemData } from "types"
 
 export const getItems = async (req: Request, res: Response) => {
     try {
@@ -41,7 +42,7 @@ export const updateItem = async (req: Request, res: Response) => {
     }
 
     try {
-        await Item.updateById(req.body as IItem)
+        await Item.updateById(req.body as ItemData)
 
         return res.status(httpStatusCodes.ACCEPTED).json({
             message: "Successfully updated a user.",

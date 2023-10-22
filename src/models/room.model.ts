@@ -2,18 +2,9 @@ import moment from "moment"
 import { ResultSetHeader, RowDataPacket } from "mysql2"
 
 import { roomStatuses } from "@common/roomStatuses"
+import { RoomData, UserData } from "types"
 
 import { pool } from "../database/mysql.db"
-import { IUser } from "./user.model"
-
-export interface IRoom {
-    id: number
-    userId: number
-    name: string
-    status: string
-    creationDate: Date
-    lastUpdate: Date
-}
 
 //TODO: Split into classes?
 export class Room {
@@ -21,7 +12,7 @@ export class Room {
         userId,
         name,
         creationDate,
-    }: Pick<IRoom, "userId" | "name" | "creationDate">) {
+    }: Pick<RoomData, "userId" | "name" | "creationDate">) {
         const mysqlTimestamp = moment(creationDate).format(
             "YYYY-MM-DD HH:mm:ss"
         )
@@ -48,14 +39,14 @@ export class Room {
         `
         const [result] = await pool.execute<RowDataPacket[]>(sql)
 
-        return result as IRoom[]
+        return result as RoomData[]
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM room WHERE id = ?;`
         const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
 
-        return result[0] as IRoom
+        return result[0] as RoomData
     }
 
     static async getByUser(userId: number) {
@@ -72,10 +63,10 @@ export class Room {
             userId,
         ])
 
-        return result as IRoom[]
+        return result as RoomData[]
     }
 
-    static async updateById({ id, name, status }: IRoom) {
+    static async updateById({ id, name, status }: RoomData) {
         const sql = `
             UPDATE room
             SET name = ?, status = ?  
@@ -137,7 +128,7 @@ export class Room {
 
         const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
 
-        return result as IUser[]
+        return result as UserData[]
     }
 
     static async excludeMemberById({ roomId, userId }: Record<string, number>) {

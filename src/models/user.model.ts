@@ -1,19 +1,13 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
-import { pool } from "../database/mysql.db"
 
-export interface IUser {
-    id: number
-    email: string
-    password: string
-    firstName?: string
-    lastName?: string
-}
+import { UserData } from "types"
+
+import { pool } from "../database/mysql.db"
 
 //TODO: Add an actual login logic
 //TODO: Add a timestamp tracking
-//TODO: Update the return types
 export class User {
-    static async insert({ email, password, firstName, lastName }: IUser) {
+    static async insert({ email, password, firstName, lastName }: UserData) {
         // const timestamp = new Date().getTime()
         const sql = `
             INSERT INTO user (email, password, first_name, last_name)
@@ -35,7 +29,7 @@ export class User {
 
         const [result] = await pool.execute<RowDataPacket[]>(sql)
 
-        return result as IUser[]
+        return result as UserData[]
     }
 
     static async getById(id: number) {
@@ -43,7 +37,7 @@ export class User {
 
         const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
 
-        return result[0] as IUser
+        return result[0] as UserData
     }
 
     static async updateById({
@@ -52,7 +46,7 @@ export class User {
         password,
         firstName,
         lastName,
-    }: IUser) {
+    }: UserData) {
         const sql = `
             UPDATE user
             SET email = ?, password = ?, first_name = ?, last_name = ?,  
