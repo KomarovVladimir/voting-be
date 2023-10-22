@@ -1,8 +1,10 @@
 import moment from "moment"
+import { ResultSetHeader, RowDataPacket } from "mysql2"
 
 import { roomStatuses } from "@common/roomStatuses"
 
 import { pool } from "../database/mysql.db"
+import { IUser } from "./user.model"
 
 export interface IRoom {
     id: number
@@ -14,7 +16,6 @@ export interface IRoom {
 }
 
 //TODO: Split into classes?
-//TODO: Add more specific types
 export class Room {
     static async add({
         userId,
@@ -24,17 +25,20 @@ export class Room {
         const mysqlTimestamp = moment(creationDate).format(
             "YYYY-MM-DD HH:mm:ss"
         )
+
         const sql = `
             INSERT INTO room (owner_id, name, created, status)
             VALUES(?, ?, ?, ?);
         `
 
-        await pool.execute(sql, [
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
             userId,
             name,
             mysqlTimestamp,
             roomStatuses.PENDING,
         ])
+
+        return result
     }
 
     static async getAll() {
@@ -42,16 +46,16 @@ export class Room {
             SELECT id, owner_id ownerId, name, status
             FROM room;
         `
-        const [result] = await pool.execute(sql)
+        const [result] = await pool.execute<RowDataPacket[]>(sql)
 
-        return result
+        return result as IRoom[]
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM room WHERE id = ?;`
-        const [result] = await pool.execute(sql, [id])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
 
-        return Array.isArray(result) ? (result[0] as IRoom) : result
+        return result[0] as IRoom
     }
 
     static async getByUser(userId: number) {
@@ -63,9 +67,12 @@ export class Room {
             WHERE u.id = ? OR rm.user_id = ?;
         `
 
-        const [result] = await pool.execute(sql, [userId, userId])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [
+            userId,
+            userId,
+        ])
 
-        return result
+        return result as IRoom[]
     }
 
     static async updateById({ id, name, status }: IRoom) {
@@ -74,13 +81,21 @@ export class Room {
             SET name = ?, status = ?  
             WHERE id = ?;
         `
-        await pool.execute(sql, [name, status, id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            name,
+            status,
+            id,
+        ])
+
+        return result
     }
 
     static async deleteById(id: number) {
         const sql = "DELETE FROM room WHERE id = ?;"
 
-        await pool.execute(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+
+        return result
     }
 
     static async joinRoom({ roomId, userId }: Record<string, number>) {
@@ -89,7 +104,12 @@ export class Room {
             VALUES (?, ?);
         `
 
-        await pool.execute(sql, [roomId, userId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+        ])
+
+        return result
     }
 
     static async leaveRoom({ roomId, userId }: Record<string, number>) {
@@ -98,7 +118,12 @@ export class Room {
             WHERE room_id = ? AND user_id = ?;
         `
 
-        await pool.execute(sql, [roomId, userId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+        ])
+
+        return result
     }
 
     static async getRoomMembers(roomId: number) {
@@ -110,9 +135,9 @@ export class Room {
             WHERE rm.room_id = ?;
         `
 
-        const [result] = await pool.execute(sql, [roomId])
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
 
-        return result
+        return result as IUser[]
     }
 
     static async excludeMemberById({ roomId, userId }: Record<string, number>) {
@@ -121,6 +146,11 @@ export class Room {
             WHERE rm.room_id = ? AND rm.user_id = ?;
         `
 
-        await pool.execute(sql, [roomId, userId])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            roomId,
+            userId,
+        ])
+
+        return result
     }
 }

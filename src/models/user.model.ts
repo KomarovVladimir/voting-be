@@ -32,16 +32,18 @@ export class User {
 
     static async getAll() {
         const sql = "SELECT * FROM user;"
-        const [result] = await pool.execute(sql)
 
-        return result
+        const [result] = await pool.execute<RowDataPacket[]>(sql)
+
+        return result as IUser[]
     }
 
     static async getById(id: number) {
         const sql = `SELECT * FROM user WHERE id = ?;`
-        const [result] = await pool.execute(sql, [id])
 
-        return result
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
+
+        return result[0] as IUser
     }
 
     static async updateById({
@@ -56,13 +58,23 @@ export class User {
             SET email = ?, password = ?, first_name = ?, last_name = ?,  
             WHERE id = ?;
         `
-        await pool.execute(sql, [email, password, firstName, lastName, id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [
+            email,
+            password,
+            firstName,
+            lastName,
+            id,
+        ])
+
+        return result
     }
 
     static async deleteById(id: number) {
         const sql = "DELETE FROM user WHERE id = ?;"
 
-        await pool.execute(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+
+        return result
     }
 
     static async findByEmail(email: string) {
