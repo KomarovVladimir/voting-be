@@ -74,7 +74,7 @@ export class User {
     }
 
     static async findByEmail(email: string) {
-        const sql = `SELECT * FROM user WHERE email = ?;`
+        const sql = `SELECT id, email, password FROM user WHERE email = ?;`
 
         const [result] = await pool.execute<RowDataPacket[]>(sql, [email])
 

@@ -6,11 +6,8 @@ import cookieParser from "cookie-parser"
 
 //TODO: Update imports
 import { isOperationalError, logError } from "utils"
-import { logErrorMiddleware, errorHandlerMiddleware } from "middleware"
+import { errorLogger, errorHandler } from "middleware"
 import { apiRouter } from "routes"
-
-//TODO: Update the cors
-export const app = express()
 
 process.on("uncaughtException", (err) => {
     logError(err)
@@ -24,19 +21,23 @@ process.on("unhandledRejection", (err) => {
     throw err
 })
 
+//TODO: Update the cors
+const port = process.env.PORT
+export const app = express()
+
 app.use(express.json())
 app.use(
     cors({
         origin: "http://localhost:3000",
-        // credentials: true,
+        credentials: true,
     })
 )
-apiRouter.use(cookieParser())
+
+app.use(cookieParser())
 
 app.use("/api/v1", apiRouter)
 
-app.use(logErrorMiddleware)
-app.use(errorHandlerMiddleware)
+app.use(errorLogger)
+app.use(errorHandler)
 
-const port = process.env.PORT
 app.listen(port, () => console.log(`Running on port ${port}`))

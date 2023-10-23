@@ -7,7 +7,7 @@ export function logError(err: Error | BaseError) {
     console.error(err)
 }
 
-export function logErrorMiddleware(
+export function errorLogger(
     err: BaseError,
     req: Request,
     res: Response,

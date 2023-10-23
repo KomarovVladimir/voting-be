@@ -1,1 +1,1 @@
-export * from "./apiRouter"
+export * from "./api.router"
