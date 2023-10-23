@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { isNil, some, values } from "lodash"
 
-import { Message } from "@models/message.model"
-import { httpStatusCodes } from "@common/httpStatusCodes"
-import { BadRequestError } from "@utils/badRequestError"
+import { Message } from "models"
+import { httpStatusCodes } from "common"
+import { BadRequestError } from "utils"
 import { MessageData } from "types"
 
 //TODO: Optimize error handling

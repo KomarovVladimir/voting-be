@@ -10,15 +10,10 @@
         "outDir": "dist",
         "baseUrl": "src/",
         "paths": {
-            "@config/*": ["../config/*"],
-            "@models/*": ["./models/*"],
-            "@controllers/*": ["./controllers/*"],
-            "@routes/*": ["./routes/*"],
-            "@utils/*": ["./utils/*"],
-            "@common/*": ["./common/*"]
+            "@config/*": ["../config/*"]
         }
     },
-    "include": ["src/**/*", "config"],
+    "include": ["src/**/*", "config", "src/utils/index.ts"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]
     }

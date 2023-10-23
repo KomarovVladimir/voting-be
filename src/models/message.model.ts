@@ -2,8 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import moment from "moment"
 
 import { MessageData } from "types"
-
-import { pool } from "../database/mysql.db"
+import { pool } from "database"
 
 //TODO: Update the return types
 //TODO: Add all the checks

@@ -8,7 +8,7 @@ import {
     login,
     logout,
     getUserRooms,
-} from "@controllers/user.controller"
+} from "controllers"
 
 export const usersRouter = Router()
 

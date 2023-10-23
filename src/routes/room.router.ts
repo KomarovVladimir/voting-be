@@ -10,21 +10,18 @@ import {
     leaveRoom,
     getRoomMembers,
     excludeMember,
-} from "@controllers/room.controller"
-import {
     getItems,
     addItem,
     updateItem,
     deleteItem,
     getVotingData,
-} from "@controllers/item.controller"
-import {
     addMessage,
     deleteMessage,
     getRoomMessages,
     updateMessage,
-} from "@controllers/message.controller"
-import { downvote, vote } from "@controllers/vote.controller"
+    downvote,
+    vote,
+} from "controllers"
 
 export const roomsRouter = Router()
 

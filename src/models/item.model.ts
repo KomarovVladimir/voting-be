@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 
 import { ItemData } from "types"
 
-import { pool } from "../database/mysql.db"
+import { pool } from "database"
 
 //TODO: Update the return types
 //TODO: Update the params types

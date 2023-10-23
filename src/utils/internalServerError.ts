@@ -1,4 +1,4 @@
-import { httpStatusCodes } from "@common/httpStatusCodes"
+import { httpStatusCodes } from "common/httpStatusCodes"
 
 import { BaseError } from "./baseError"
 

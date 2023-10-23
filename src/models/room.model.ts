@@ -1,10 +1,9 @@
 import moment from "moment"
 import { ResultSetHeader, RowDataPacket } from "mysql2"
 
-import { roomStatuses } from "@common/roomStatuses"
+import { roomStatuses } from "common"
 import { RoomData, UserData } from "types"
-
-import { pool } from "../database/mysql.db"
+import { pool } from "database"
 
 //TODO: Split into classes?
 export class Room {

@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Room } from "@models/room.model"
-import { httpStatusCodes } from "@common/httpStatusCodes"
-import { BadRequestError } from "@utils/badRequestError"
+import { Room } from "models"
+import { httpStatusCodes } from "common"
+import { BadRequestError } from "utils"
 import { RoomData } from "types"
 
 export const getRooms = async (req: Request, res: Response) => {

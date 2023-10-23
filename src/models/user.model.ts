@@ -2,8 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import moment from "moment"
 
 import { UserData } from "types"
-
-import { pool } from "../database/mysql.db"
+import { pool } from "database"
 
 //TODO: Add an actual login logic
 //TODO: Add a timestamp tracking

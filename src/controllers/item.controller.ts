@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Item } from "@models/item.model"
-import { httpStatusCodes } from "@common/httpStatusCodes"
-import { BadRequestError } from "@utils/badRequestError"
+import { Item } from "models"
+import { httpStatusCodes } from "common"
+import { BadRequestError } from "utils"
 import { ItemData } from "types"
 
 export const getItems = async (req: Request, res: Response) => {

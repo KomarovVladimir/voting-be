@@ -1,8 +1,7 @@
 import { ResultSetHeader } from "mysql2/promise"
 
 import { VoteData } from "types"
-
-import { pool } from "../database/mysql.db"
+import { pool } from "database"
 
 export class Vote {
     static async add({ roomId, userId, itemId }: VoteData) {

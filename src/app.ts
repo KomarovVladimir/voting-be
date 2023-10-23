@@ -4,13 +4,10 @@ import cors from "cors"
 import "express-async-errors"
 import cookieParser from "cookie-parser"
 
-import {
-    errorHandler,
-    isOperationalError,
-    logError,
-    logErrorMiddleware,
-} from "@utils/errorHandler"
-import { apiRouter } from "@routes/apiRouter"
+//TODO: Update imports
+import { isOperationalError, logError } from "utils"
+import { logErrorMiddleware, errorHandlerMiddleware } from "middleware"
+import { apiRouter } from "routes"
 
 //TODO: Update the cors
 export const app = express()
@@ -39,7 +36,7 @@ apiRouter.use(cookieParser())
 app.use("/api/v1", apiRouter)
 
 app.use(logErrorMiddleware)
-app.use(errorHandler)
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT
 app.listen(port, () => console.log(`Running on port ${port}`))

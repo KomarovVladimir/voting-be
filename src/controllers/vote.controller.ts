@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { httpStatusCodes } from "@common/httpStatusCodes"
-import { BadRequestError } from "@utils/badRequestError"
-import { Vote } from "@models/vote.model"
+import { httpStatusCodes } from "common"
+import { BadRequestError } from "utils"
+import { Vote } from "models"
 
 export const vote = async (req: Request, res: Response) => {
     if (some(values(req.params), isNil)) {

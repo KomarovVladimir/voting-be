@@ -3,12 +3,9 @@ import { values, some, isNil } from "lodash"
 import { compareSync, genSaltSync, hashSync } from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
 
-import { User } from "@models/user.model"
-import { httpStatusCodes } from "@common/httpStatusCodes"
-import { InternalServerError } from "@utils/internalServerError"
-import { BadRequestError } from "@utils/badRequestError"
-import { UnauthorizedError } from "@utils/unauthorizedError"
-import { Room } from "@models/room.model"
+import { Room, User } from "models"
+import { httpStatusCodes } from "common"
+import { UnauthorizedError, BadRequestError } from "utils"
 import { UserData } from "types"
 
 //TODO: Work on responses
