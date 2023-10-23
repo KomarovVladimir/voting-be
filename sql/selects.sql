@@ -4,6 +4,8 @@ SELECT * FROM item;
 SELECT * FROM vote;
 SELECT * FROM room_member;
 
+SELECT * FROM user WHERE email = "test@email.com";
+
 -- Ger rooms data
 SELECT room.id room_id, room.owner_id, room_member.user_id, concat(first_name, " ", last_name) as authorName
 FROM room 

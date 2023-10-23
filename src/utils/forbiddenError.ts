@@ -5,10 +5,10 @@ import { BaseError } from "./baseError"
 export class ForbiddenError extends BaseError {
     constructor(
         name: string,
+        message = "Unauthorized",
         statusCode = httpStatusCodes.UNAUTHORIZED,
-        message = "Unauthorized.",
         isOperational = true
     ) {
-        super(name, statusCode, message, isOperational)
+        super(name, message, statusCode, isOperational)
     }
 }

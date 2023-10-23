@@ -1,4 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
+import moment from "moment"
 
 import { UserData } from "types"
 
@@ -8,10 +9,10 @@ import { pool } from "../database/mysql.db"
 //TODO: Add a timestamp tracking
 export class User {
     static async insert({ email, password, firstName, lastName }: UserData) {
-        // const timestamp = new Date().getTime()
+        const timestamp = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
         const sql = `
-            INSERT INTO user (email, password, first_name, last_name)
-            VALUES(?, ?, ?, ?);
+            INSERT INTO user (email, password, first_name, last_name, created, last_updated)
+            VALUES(?, ?, ?, ?, ?, ?);
         `
 
         const result = await pool.execute<ResultSetHeader>(sql, [
@@ -19,6 +20,8 @@ export class User {
             password,
             firstName,
             lastName,
+            timestamp,
+            timestamp,
         ])
 
         return result[0].insertId

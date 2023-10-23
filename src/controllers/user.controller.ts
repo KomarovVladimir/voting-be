@@ -1,35 +1,36 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
+import { genSaltSync, hashSync } from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
 
 import { User } from "@models/user.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
 import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
-import { Api404Error } from "@utils/api404Error"
+import { UnauthorizedError } from "@utils/unauthorizedError"
 import { Room } from "@models/room.model"
 import { UserData } from "types"
 
 //TODO: Work on responses
 export const getUsers = async (req: Request, res: Response) => {
-    try {
-        const users = await User.getAll()
+    const users = await User.getAll()
 
-        res.status(httpStatusCodes.OK).json(users)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(users)
 }
 
 //TODO: Update the validation
-export const addUser = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
         throw new BadRequestError("Error")
     }
 
-    const { email, password, firstName, lastName } = req.body
-
     try {
+        const { email, firstName, lastName } = req.body
+        let { password } = req.body
+
+        const salt = genSaltSync(10)
+        password = hashSync(password, salt)
+
         const user = await User.insert({
             email,
             password,
@@ -50,9 +51,8 @@ export const addUser = async (req: Request, res: Response) => {
             .status(httpStatusCodes.CREATED)
             .json({
                 token: jsontoken,
-                message: "Successfully created a user.",
+                message: "Successfully created a user",
             })
-        // .redirect("/mainpage")
     } catch (err) {
         throw new InternalServerError("Error")
     }
@@ -65,74 +65,61 @@ export const updateUser = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        await User.updateById({
-            id,
-            email,
-            password,
-            firstName,
-            lastName,
-        } as UserData)
+    await User.updateById({
+        id,
+        email,
+        password,
+        firstName,
+        lastName,
+    } as UserData)
 
-        return res.status(httpStatusCodes.ACCEPTED).json({
-            message: "Successfully updated a user.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    return res.status(httpStatusCodes.ACCEPTED).json({
+        message: "Successfully updated a user",
+    })
 }
 
 export const deleteUser = async (req: Request, res: Response) => {
     const id = Number(req.params.id)
 
-    try {
-        await User.deleteById(id)
+    await User.deleteById(id)
 
-        res.status(httpStatusCodes.OK).json({
-            message: "Successfully deleted a user.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json({
+        message: "Successfully deleted a user",
+    })
 }
 
-//TODO: Prsroperly type query results
+//TODO: Properly type query results
+//TODO: Update error handling
 export const login = async (
     req: Request<never, never, Pick<UserData, "email" | "password">>,
     res: Response
 ) => {
-    try {
-        const { email, password } = req.body
+    if (some(values(req.body), isNil)) {
+        throw new BadRequestError("Error")
+    }
 
-        const user = (await User.findByEmail(email)) as UserData
+    const { email, password } = req.body
 
-        if (!user) {
-            throw new Api404Error("Error")
-        }
+    const user = await User.findByEmail(email)
 
-        if (user.password === password) {
-            res.status(httpStatusCodes.OK).json({
-                id: user.id,
-                email: user.email,
-            })
-        } else {
-            res.status(httpStatusCodes.UNAUTHORIZED).json({
-                statusMessage: "Wrong password.",
-            })
-        }
-    } catch (err) {
-        throw new InternalServerError("Error")
+    if (!user) {
+        throw new UnauthorizedError("Error", "Wrong email or password")
+    }
+
+    if (user.password === password) {
+        res.status(httpStatusCodes.OK).json({
+            id: user.id,
+            email: user.email,
+        })
+    } else {
+        throw new UnauthorizedError("Error", "Wrong email or password")
     }
 }
 
 export const logout = async (req: Request, res: Response) => {
-    try {
-        res.status(httpStatusCodes.OK).json({
-            message: "Successfully logged out.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json({
+        message: "Successfully logged out",
+    })
 }
 
 export const getUserRooms = async (req: Request, res: Response) => {
@@ -140,11 +127,7 @@ export const getUserRooms = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        const rooms = await Room.getByUser(Number(req.params.userId))
+    const rooms = await Room.getByUser(Number(req.params.userId))
 
-        res.status(httpStatusCodes.OK).json(rooms)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(rooms)
 }

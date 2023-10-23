@@ -3,28 +3,19 @@ import { values, some, isNil } from "lodash"
 
 import { Room } from "@models/room.model"
 import { httpStatusCodes } from "@common/httpStatusCodes"
-import { InternalServerError } from "@utils/internalServerError"
 import { BadRequestError } from "@utils/badRequestError"
 import { RoomData } from "types"
 
 export const getRooms = async (req: Request, res: Response) => {
-    try {
-        const rooms = await Room.getAll()
+    const rooms = await Room.getAll()
 
-        res.status(httpStatusCodes.OK).json(rooms)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(rooms)
 }
 
 export const getRoomById = async (req: Request, res: Response) => {
-    try {
-        const result = await Room.getById(Number(req.params.roomId))
+    const result = await Room.getById(Number(req.params.roomId))
 
-        res.status(httpStatusCodes.OK).json(result)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(result)
 }
 
 export const addRoom = async (req: Request, res: Response) => {
@@ -32,15 +23,11 @@ export const addRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        await Room.add(req.body)
+    await Room.add(req.body)
 
-        res.status(httpStatusCodes.CREATED).json({
-            message: "Successfully created a room.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.CREATED).json({
+        message: "Successfully created a room",
+    })
 }
 
 export const updateRoom = async (req: Request, res: Response) => {
@@ -48,15 +35,11 @@ export const updateRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        await Room.updateById(req.body as RoomData)
+    await Room.updateById(req.body as RoomData)
 
-        return res.status(httpStatusCodes.ACCEPTED).json({
-            message: "Successfully updated a user.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    return res.status(httpStatusCodes.ACCEPTED).json({
+        message: "Successfully updated a user",
+    })
 }
 
 //TODO: Add more detailed messages
@@ -67,15 +50,11 @@ export const deleteRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        await Room.deleteById(Number(req.params.roomId))
+    await Room.deleteById(Number(req.params.roomId))
 
-        res.status(httpStatusCodes.OK).json({
-            message: "Successfully deleted a room.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json({
+        message: "Successfully deleted a room",
+    })
 }
 
 export const joinRoom = async (req: Request, res: Response) => {
@@ -83,20 +62,16 @@ export const joinRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        const params = {
-            roomId: Number(req.params.roomId),
-            userId: Number(req.params.userId),
-        }
-
-        await Room.joinRoom(params)
-
-        res.status(httpStatusCodes.OK).json({
-            message: "Successfully joined a room.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
+    const params = {
+        roomId: Number(req.params.roomId),
+        userId: Number(req.params.userId),
     }
+
+    await Room.joinRoom(params)
+
+    res.status(httpStatusCodes.OK).json({
+        message: "Successfully joined a room",
+    })
 }
 
 export const leaveRoom = async (req: Request, res: Response) => {
@@ -109,15 +84,11 @@ export const leaveRoom = async (req: Request, res: Response) => {
         userId: Number(req.params.userId),
     }
 
-    try {
-        await Room.leaveRoom(params)
+    await Room.leaveRoom(params)
 
-        res.status(httpStatusCodes.OK).json({
-            message: "Successfully leaved a room.",
-        })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json({
+        message: "Successfully leaved a room",
+    })
 }
 
 export const getRoomMembers = async (req: Request, res: Response) => {
@@ -125,13 +96,9 @@ export const getRoomMembers = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        const result = await Room.getRoomMembers(Number(req.params.roomId))
+    const result = await Room.getRoomMembers(Number(req.params.roomId))
 
-        res.status(httpStatusCodes.OK).json(result)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(result)
 }
 
 //TODO: Fix params check
@@ -145,11 +112,7 @@ export const excludeMember = async (req: Request, res: Response) => {
         userId: Number(req.params.userId),
     }
 
-    try {
-        const result = await Room.excludeMemberById(params)
+    const result = await Room.excludeMemberById(params)
 
-        res.status(httpStatusCodes.OK).json(result)
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
+    res.status(httpStatusCodes.OK).json(result)
 }

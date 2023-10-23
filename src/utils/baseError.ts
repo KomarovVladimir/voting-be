@@ -7,8 +7,8 @@ export class BaseError extends Error {
 
     constructor(
         name: string,
-        statusCode: number,
         message: string,
+        statusCode: number,
         isOperational: boolean
     ) {
         super(message)

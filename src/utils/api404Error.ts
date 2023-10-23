@@ -5,10 +5,10 @@ import { BaseError } from "./baseError"
 export class Api404Error extends BaseError {
     constructor(
         name: string,
+        message = "Not found",
         statusCode = httpStatusCodes.NOT_FOUND,
-        message = "Not found.",
         isOperational = true
     ) {
-        super(name, statusCode, message, isOperational)
+        super(name, message, statusCode, isOperational)
     }
 }

@@ -2,7 +2,7 @@ import { Router } from "express"
 
 import {
     getUsers,
-    addUser,
+    register,
     updateUser,
     deleteUser,
     login,
@@ -18,7 +18,7 @@ usersRouter.post("/login", login)
 
 usersRouter.post("/logout", logout)
 
-usersRouter.post("/register", addUser)
+usersRouter.post("/register", register)
 
 usersRouter.route("/:id").put(updateUser).delete(deleteUser)
 

@@ -34,7 +34,7 @@ export const errorHandler = (
 ) => {
     if (err instanceof BaseError) {
         res.status(err.statusCode).json({
-            error: { message: err.message, timestamp: err.timestamp },
+            error: { message: err.message },
         })
     } else {
         res.status(httpStatusCodes.INTERNAL_SERVER).json({

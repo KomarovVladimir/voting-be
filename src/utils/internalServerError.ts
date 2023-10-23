@@ -5,10 +5,10 @@ import { BaseError } from "./baseError"
 export class InternalServerError extends BaseError {
     constructor(
         name: string,
-        statusCode = httpStatusCodes.INTERNAL_SERVER,
         message = "Internal server error",
+        statusCode = httpStatusCodes.INTERNAL_SERVER,
         isOperational = true
     ) {
-        super(name, statusCode, message, isOperational)
+        super(name, message, statusCode, isOperational)
     }
 }
