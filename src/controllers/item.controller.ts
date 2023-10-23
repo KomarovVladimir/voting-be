@@ -1,11 +1,10 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
-import jwt from "jsonwebtoken"
 
 import { Item } from "models"
 import { httpStatusCodes } from "common"
-import { BadRequestError } from "utils"
-import { ItemData, UserData } from "types"
+import { BadRequestError, getUserId } from "utils"
+import { ItemData } from "types"
 
 export const addItem = async (req: Request, res: Response) => {
     if (isNil(req.body.name)) {
@@ -50,15 +49,9 @@ export const getItems = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const {
-        user: { id: userId },
-    } = jwt.decode(req.cookies?.token) as {
-        user: UserData
-    }
-
     const params = {
         roomId: +req.params.roomId,
-        userId: +userId,
+        userId: getUserId(req),
     }
 
     const votes = await Item.getByRoomId(params)

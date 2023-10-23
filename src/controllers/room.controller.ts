@@ -1,11 +1,10 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
-import jwt from "jsonwebtoken"
 
 import { Room } from "models"
 import { httpStatusCodes } from "common"
-import { BadRequestError } from "utils"
-import { RoomData, UserData } from "types"
+import { BadRequestError, getUserId } from "utils"
+import { RoomData } from "types"
 
 export const getRooms = async (req: Request, res: Response) => {
     const rooms = await Room.getAll()
@@ -20,13 +19,7 @@ export const getRoomById = async (req: Request, res: Response) => {
 }
 
 export const getUserRooms = async (req: Request, res: Response) => {
-    const {
-        user: { id: userId },
-    } = jwt.decode(req.cookies?.token) as {
-        user: UserData
-    }
-
-    const rooms = await Room.getByUser(+userId)
+    const rooms = await Room.getByUser(getUserId(req))
 
     res.status(httpStatusCodes.OK).json(rooms)
 }
@@ -75,15 +68,9 @@ export const joinRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const {
-        user: { id: userId },
-    } = jwt.decode(req.cookies?.token) as {
-        user: UserData
-    }
-
     const params = {
         roomId: +req.params.roomId,
-        userId,
+        userId: getUserId(req),
     }
 
     await Room.joinRoom(params)
@@ -98,15 +85,9 @@ export const leaveRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const {
-        user: { id: userId },
-    } = jwt.decode(req.cookies?.token) as {
-        user: UserData
-    }
-
     const params = {
         roomId: +req.params.roomId,
-        userId,
+        userId: getUserId(req),
     }
 
     await Room.leaveRoom(params)
@@ -132,15 +113,9 @@ export const excludeMember = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const {
-        user: { id: userId },
-    } = jwt.decode(req.cookies?.token) as {
-        user: UserData
-    }
-
     const params = {
         roomId: +req.params.roomId,
-        userId,
+        userId: getUserId(req),
     }
 
     const result = await Room.excludeMemberById(params)
