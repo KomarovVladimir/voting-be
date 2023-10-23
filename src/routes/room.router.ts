@@ -2,7 +2,6 @@ import { Router } from "express"
 
 import {
     getRoomById,
-    getRooms,
     addRoom,
     updateRoom,
     deleteRoom,
@@ -14,19 +13,19 @@ import {
     addItem,
     updateItem,
     deleteItem,
-    getVotingData,
     addMessage,
     deleteMessage,
     getRoomMessages,
     updateMessage,
     downvote,
     vote,
+    getUserRooms,
 } from "controllers"
 
 export const roomsRouter = Router()
 
 //Room
-roomsRouter.route("/").get(getRooms).post(addRoom)
+roomsRouter.route("/").get(getUserRooms).post(addRoom)
 roomsRouter
     .route("/:roomId")
     .get(getRoomById)
@@ -35,18 +34,14 @@ roomsRouter
 
 //Members
 roomsRouter.route("/:roomId/members").get(getRoomMembers)
-roomsRouter.route("/:roomId/join/:userId").post(joinRoom).delete(leaveRoom)
+roomsRouter.route("/:roomId/join").post(joinRoom).delete(leaveRoom)
 roomsRouter.route("/:roomId/members/:userId/exclude").delete(excludeMember)
 
 //Items
-//TODO: Rename getVotingData
+//TODO: Rename getItems
 roomsRouter.route("/:roomId/items").get(getItems).post(addItem)
 roomsRouter.route("/:roomId/items/:id").put(updateItem).delete(deleteItem)
-roomsRouter.route("/:roomId/user/:userId/items").get(getVotingData)
-roomsRouter
-    .route("/:roomId/users/:userId/items/:itemId/vote")
-    .post(vote)
-    .delete(downvote)
+roomsRouter.route("/:roomId/items/:itemId/vote").post(vote).delete(downvote)
 
 //Messages
 roomsRouter.route("/:roomId/messages").get(getRoomMessages).post(addMessage)

@@ -1,16 +1,11 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
+import jwt from "jsonwebtoken"
 
 import { Item } from "models"
 import { httpStatusCodes } from "common"
 import { BadRequestError } from "utils"
-import { ItemData } from "types"
-
-export const getItems = async (req: Request, res: Response) => {
-    const items = await Item.getByRoomId(req.params.roomId)
-
-    res.status(httpStatusCodes.OK).json(items)
-}
+import { ItemData, UserData } from "types"
 
 export const addItem = async (req: Request, res: Response) => {
     if (isNil(req.body.name)) {
@@ -18,7 +13,7 @@ export const addItem = async (req: Request, res: Response) => {
     }
 
     await Item.add({
-        roomId: Number(req.params.roomId),
+        roomId: +req.params.roomId,
         name: req.body.name,
     })
 
@@ -40,7 +35,7 @@ export const updateItem = async (req: Request, res: Response) => {
 }
 
 export const deleteItem = async (req: Request, res: Response) => {
-    const id = Number(req.params.id)
+    const id = +req.params.id
 
     await Item.deleteById(id)
 
@@ -50,17 +45,23 @@ export const deleteItem = async (req: Request, res: Response) => {
 }
 
 //TODO: Rename
-export const getVotingData = async (req: Request, res: Response) => {
+export const getItems = async (req: Request, res: Response) => {
     if (some(values(req.body), isNil)) {
         throw new BadRequestError("Error")
     }
 
-    const params = {
-        roomId: Number(req.params.roomId),
-        userId: Number(req.params.userId),
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
     }
 
-    const votes = await Item.getVotingData(params)
+    const params = {
+        roomId: +req.params.roomId,
+        userId: +userId,
+    }
+
+    const votes = await Item.getByRoomId(params)
 
     res.status(httpStatusCodes.OK).json(votes)
 }

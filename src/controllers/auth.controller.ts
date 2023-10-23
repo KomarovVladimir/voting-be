@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 import { compareSync, genSaltSync, hashSync } from "bcrypt"
-import jsonwebtoken from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
 import { User } from "models"
 import { httpStatusCodes } from "common"
@@ -27,7 +27,7 @@ export const register = async (req: Request, res: Response) => {
         lastName,
     } as UserData)
 
-    const token = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ user }, process.env.SECRET_KEY, {
         expiresIn: "30m",
     })
 
@@ -66,7 +66,7 @@ export const login = async (
     if (isValidPassword) {
         delete user.password
 
-        const token = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
+        const token = jwt.sign({ user }, process.env.SECRET_KEY, {
             expiresIn: "30m",
         })
 

@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
 import { isNil, some, values } from "lodash"
+import jwt from "jsonwebtoken"
 
 import { Message } from "models"
 import { httpStatusCodes } from "common"
 import { BadRequestError } from "utils"
-import { MessageData } from "types"
+import { UserData, MessageData } from "types"
 
 //TODO: Optimize error handling
 //TODO: Test the existing codebase
@@ -19,7 +20,13 @@ export const addMessage = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    await Message.add({ roomId: req.params.roomId, ...req.body })
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
+    }
+
+    await Message.add({ roomId: req.params.roomId, userId, ...req.body })
 
     res.status(httpStatusCodes.CREATED).json({
         message: "Successfully posted a message",
@@ -44,7 +51,7 @@ export const updateMessage = async (req: Request, res: Response) => {
 }
 
 export const deleteMessage = async (req: Request, res: Response) => {
-    const id = Number(req.params.id)
+    const id = +req.params.id
 
     await Message.deleteById(id)
 

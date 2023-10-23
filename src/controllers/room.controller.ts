@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
+import jwt from "jsonwebtoken"
 
 import { Room } from "models"
 import { httpStatusCodes } from "common"
 import { BadRequestError } from "utils"
-import { RoomData } from "types"
+import { RoomData, UserData } from "types"
 
 export const getRooms = async (req: Request, res: Response) => {
     const rooms = await Room.getAll()
@@ -13,9 +14,21 @@ export const getRooms = async (req: Request, res: Response) => {
 }
 
 export const getRoomById = async (req: Request, res: Response) => {
-    const result = await Room.getById(Number(req.params.roomId))
+    const result = await Room.getById(+req.params.roomId)
 
     res.status(httpStatusCodes.OK).json(result)
+}
+
+export const getUserRooms = async (req: Request, res: Response) => {
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
+    }
+
+    const rooms = await Room.getByUser(+userId)
+
+    res.status(httpStatusCodes.OK).json(rooms)
 }
 
 export const addRoom = async (req: Request, res: Response) => {
@@ -50,7 +63,7 @@ export const deleteRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    await Room.deleteById(Number(req.params.roomId))
+    await Room.deleteById(+req.params.roomId)
 
     res.status(httpStatusCodes.OK).json({
         message: "Successfully deleted a room",
@@ -62,9 +75,15 @@ export const joinRoom = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
+    }
+
     const params = {
-        roomId: Number(req.params.roomId),
-        userId: Number(req.params.userId),
+        roomId: +req.params.roomId,
+        userId,
     }
 
     await Room.joinRoom(params)
@@ -75,13 +94,19 @@ export const joinRoom = async (req: Request, res: Response) => {
 }
 
 export const leaveRoom = async (req: Request, res: Response) => {
-    if (some(values(req.params), isNil)) {
+    if (!req.params.roomId) {
         throw new BadRequestError("Error")
     }
 
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
+    }
+
     const params = {
-        roomId: Number(req.params.roomId),
-        userId: Number(req.params.userId),
+        roomId: +req.params.roomId,
+        userId,
     }
 
     await Room.leaveRoom(params)
@@ -96,7 +121,7 @@ export const getRoomMembers = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    const result = await Room.getRoomMembers(Number(req.params.roomId))
+    const result = await Room.getRoomMembers(+req.params.roomId)
 
     res.status(httpStatusCodes.OK).json(result)
 }
@@ -107,9 +132,15 @@ export const excludeMember = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
+    const {
+        user: { id: userId },
+    } = jwt.decode(req.cookies?.token) as {
+        user: UserData
+    }
+
     const params = {
-        roomId: Number(req.params.roomId),
-        userId: Number(req.params.userId),
+        roomId: +req.params.roomId,
+        userId,
     }
 
     const result = await Room.excludeMemberById(params)

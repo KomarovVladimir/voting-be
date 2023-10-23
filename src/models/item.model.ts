@@ -21,22 +21,7 @@ export class Item {
         return result
     }
 
-    static async getByRoomId(roomId: string) {
-        const sql = `
-            SELECT item.id, item.name, COUNT(vote.user_id) votes
-            FROM item
-            LEFT JOIN vote
-            ON item.id = vote.item_id AND item.room_id = vote.room_id
-            WHERE item.room_id = ?
-            GROUP BY item.id;
-        `
-        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
-
-        return result as ItemData[]
-    }
-
-    //TODO: Optimize the query
-    static async getVotingData({
+    static async getByRoomId({
         userId,
         roomId,
     }: {

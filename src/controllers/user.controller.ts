@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
 
-import { Room, User } from "models"
+import { User } from "models"
 import { httpStatusCodes } from "common"
 import { BadRequestError } from "utils"
 import { UserData } from "types"
@@ -34,21 +34,11 @@ export const updateUser = async (req: Request, res: Response) => {
 }
 
 export const deleteUser = async (req: Request, res: Response) => {
-    const id = Number(req.params.id)
+    const id = +req.params.id
 
     await User.deleteById(id)
 
     res.status(httpStatusCodes.OK).json({
         message: "Successfully deleted a user",
     })
-}
-
-export const getUserRooms = async (req: Request, res: Response) => {
-    if (!req.params.userId) {
-        throw new BadRequestError("Error")
-    }
-
-    const rooms = await Room.getByUser(Number(req.params.userId))
-
-    res.status(httpStatusCodes.OK).json(rooms)
 }
