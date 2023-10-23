@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { values, some, isNil } from "lodash"
-import { genSaltSync, hashSync } from "bcrypt"
+import { compareSync, genSaltSync, hashSync } from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
 
 import { User } from "@models/user.model"
@@ -24,38 +24,34 @@ export const register = async (req: Request, res: Response) => {
         throw new BadRequestError("Error")
     }
 
-    try {
-        const { email, firstName, lastName } = req.body
-        let { password } = req.body
+    const { email, firstName, lastName } = req.body
+    let { password } = req.body
 
-        const salt = genSaltSync(10)
-        password = hashSync(password, salt)
+    const salt = genSaltSync(10)
+    password = hashSync(password, salt)
 
-        const user = await User.insert({
-            email,
-            password,
-            firstName,
-            lastName,
-        } as UserData)
+    const user = await User.insert({
+        email,
+        password,
+        firstName,
+        lastName,
+    } as UserData)
 
-        const jsontoken = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
-            expiresIn: "30m",
+    const token = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
+        expiresIn: "30m",
+    })
+
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        expires: new Date(Number(new Date()) + 30 * 60 * 1000),
+    })
+        .status(httpStatusCodes.CREATED)
+        .json({
+            token,
+            message: "Successfully created a user",
         })
-
-        res.cookie("token", jsontoken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            expires: new Date(Number(new Date()) + 30 * 60 * 1000),
-        })
-            .status(httpStatusCodes.CREATED)
-            .json({
-                token: jsontoken,
-                message: "Successfully created a user",
-            })
-    } catch (err) {
-        throw new InternalServerError("Error")
-    }
 }
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -106,11 +102,26 @@ export const login = async (
         throw new UnauthorizedError("Error", "Wrong email or password")
     }
 
-    if (user.password === password) {
-        res.status(httpStatusCodes.OK).json({
-            id: user.id,
-            email: user.email,
+    const isValidPassword = compareSync(password, user.password)
+
+    if (isValidPassword) {
+        user.password = undefined
+        const token = jsonwebtoken.sign({ user }, process.env.SECRET_KEY, {
+            expiresIn: "30m",
         })
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            expires: new Date(Number(new Date()) + 30 * 60 * 1000),
+        })
+            .status(httpStatusCodes.OK)
+            .json({
+                token,
+                id: user.id,
+                email: user.email,
+            })
     } else {
         throw new UnauthorizedError("Error", "Wrong email or password")
     }
