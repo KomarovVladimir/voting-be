@@ -76,9 +76,9 @@ export const login = async (
             sameSite: "strict",
             expires: new Date(Number(new Date()) + 30 * 60 * 1000),
         })
+        console.log(token)
 
         res.status(httpStatusCodes.OK).json({
-            token,
             id: user.id,
             email: user.email,
         })
@@ -88,6 +88,16 @@ export const login = async (
 }
 
 export const logout = async (req: Request, res: Response) => {
+    if (!req.cookies.token) {
+        throw new UnauthorizedError("Error")
+    }
+
+    res.cookie("token", null, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+    })
+
     res.status(httpStatusCodes.OK).json({
         message: "Successfully logged out",
     })
