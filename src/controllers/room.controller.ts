@@ -115,10 +115,12 @@ export const excludeMember = async (req: Request, res: Response) => {
 
     const params = {
         roomId: +req.params.roomId,
-        userId: getUserId(req),
+        userId: +req.params.userId,
     }
 
-    const result = await Room.excludeMemberById(params)
+    await Room.excludeMemberById(params)
 
-    res.status(httpStatusCodes.OK).json(result)
+    res.status(httpStatusCodes.OK).json({
+        message: "User left the room",
+    })
 }
