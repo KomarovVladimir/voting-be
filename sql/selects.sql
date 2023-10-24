@@ -7,11 +7,11 @@ SELECT * FROM room_member;
 SELECT * FROM user WHERE email = "test@email.com";
 
 -- Ger rooms data
-SELECT room.id room_id, room.owner_id, room_member.user_id, concat(first_name, " ", last_name) as authorName
-FROM room 
-LEFT JOIN user ON room.owner_id = user.id
-LEFT JOIN room_member ON room_member.room_id = room.id
-WHERE user.id = 1 OR room_member.user_id = 1;
+SELECT DISTINCT r.id, r.name, concat(first_name, " ", last_name) as authorName, r.owner_id = 6 AS isOwner
+FROM room AS r
+LEFT JOIN user AS u ON r.owner_id = u.id
+LEFT JOIN room_member AS rm ON rm.room_id = r.id
+WHERE u.id = 6 OR rm.user_id = 6;
 
 -- Items and votes
 SELECT item.id, item.name, COUNT(vote.user_id) votes
