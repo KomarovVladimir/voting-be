@@ -1,9 +1,9 @@
-import { Router } from "express"
+import { Router } from "express";
 
-import { usersRouter } from "./user.router"
-import { roomsRouter } from "./room.router"
+import { usersRouter } from "./user.router";
+import { roomsRouter } from "./room.router";
 
-export const privateRouter = Router()
+export const privateRouter = Router();
 
-privateRouter.use("/users", usersRouter)
-privateRouter.use("/rooms", roomsRouter)
+privateRouter.use("/users", usersRouter);
+privateRouter.use("/rooms", roomsRouter);

@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { Router } from "express";
 
 import {
     getRoomById,
@@ -20,32 +20,32 @@ import {
     downvote,
     vote,
     getUserRooms,
-} from "controllers"
+} from "controllers";
 
-export const roomsRouter = Router()
+export const roomsRouter = Router();
 
 //Room
-roomsRouter.route("/").get(getUserRooms).post(addRoom)
+roomsRouter.route("/").get(getUserRooms).post(addRoom);
 roomsRouter
     .route("/:roomId")
     .get(getRoomById)
     .patch(updateRoom)
-    .delete(deleteRoom)
+    .delete(deleteRoom);
 
 //Members
-roomsRouter.route("/:roomId/members").get(getRoomMembers)
-roomsRouter.route("/:roomId/join").post(joinRoom).delete(leaveRoom)
-roomsRouter.route("/:roomId/members/:userId/exclude").delete(excludeMember)
+roomsRouter.route("/:roomId/members").get(getRoomMembers);
+roomsRouter.route("/:roomId/join").post(joinRoom).delete(leaveRoom);
+roomsRouter.route("/:roomId/members/:userId/exclude").delete(excludeMember);
 
 //Items
 //TODO: Rename getItems
-roomsRouter.route("/:roomId/items").get(getItems).post(addItem)
-roomsRouter.route("/:roomId/items/:id").put(updateItem).delete(deleteItem)
-roomsRouter.route("/:roomId/items/:itemId/vote").post(vote).delete(downvote)
+roomsRouter.route("/:roomId/items").get(getItems).post(addItem);
+roomsRouter.route("/:roomId/items/:id").put(updateItem).delete(deleteItem);
+roomsRouter.route("/:roomId/items/:itemId/vote").post(vote).delete(downvote);
 
 //Messages
-roomsRouter.route("/:roomId/messages").get(getRoomMessages).post(addMessage)
+roomsRouter.route("/:roomId/messages").get(getRoomMessages).post(addMessage);
 roomsRouter
     .route("/:roomId/messages/:id")
     .put(updateMessage)
-    .delete(deleteMessage)
+    .delete(deleteMessage);

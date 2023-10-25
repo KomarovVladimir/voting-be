@@ -1,9 +1,9 @@
-import { Router } from "express"
+import { Router } from "express";
 
-import { login, logout, register } from "controllers"
+import { login, logout, register } from "controllers";
 
-export const authRouter = Router()
+export const authRouter = Router();
 
-authRouter.post("/login", login)
-authRouter.post("/logout", logout)
-authRouter.post("/register", register)
+authRouter.post("/login", login);
+authRouter.post("/logout", logout);
+authRouter.post("/register", register);

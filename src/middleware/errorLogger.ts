@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response, NextFunction } from "express";
 
-import { BaseError } from "utils"
+import { BaseError } from "utils";
 
 //TODO: Replace with an actual logger
 export function logError(err: Error | BaseError) {
-    console.error(err)
+    console.error(err);
 }
 
 export function errorLogger(
@@ -13,6 +13,6 @@ export function errorLogger(
     res: Response,
     next: NextFunction
 ) {
-    logError(err)
-    next(err)
+    logError(err);
+    next(err);
 }

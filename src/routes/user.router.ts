@@ -1,9 +1,9 @@
-import { Router } from "express"
+import { Router } from "express";
 
-import { getUsers, updateUser, deleteUser } from "controllers"
+import { getUsers, updateUser, deleteUser } from "controllers";
 
-export const usersRouter = Router()
+export const usersRouter = Router();
 
-usersRouter.get("/", getUsers)
+usersRouter.get("/", getUsers);
 
-usersRouter.route("/:id").put(updateUser).delete(deleteUser)
+usersRouter.route("/:id").put(updateUser).delete(deleteUser);

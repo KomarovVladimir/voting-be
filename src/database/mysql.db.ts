@@ -1,20 +1,20 @@
-import mysql = require("mysql2/promise")
-import "dotenv/config.js"
+import mysql = require("mysql2/promise");
+import "dotenv/config.js";
 
-import { dbConfig } from "@config/db.config"
+import { dbConfig } from "@config/db.config";
 
-export const pool = mysql.createPool(dbConfig)
+export const pool = mysql.createPool(dbConfig);
 
 const connectToMySQL = async () => {
     try {
-        await pool.getConnection()
+        await pool.getConnection();
 
-        console.log("MySQL database connected!")
+        console.log("MySQL database connected!");
     } catch (err) {
-        console.log("MySQL database connection error!")
+        console.log("MySQL database connection error!");
 
-        process.exit(1)
+        process.exit(1);
     }
-}
+};
 
-connectToMySQL().then()
+connectToMySQL().then();

@@ -1,18 +1,18 @@
-import { Request } from "express"
-import jwt from "jsonwebtoken"
+import { Request } from "express";
+import jwt from "jsonwebtoken";
 
-import { UserData } from "types"
+import { UserData } from "types";
 
-import { UnauthorizedError } from "./unauthorizedError"
+import { UnauthorizedError } from "./unauthorizedError";
 
 export const getUserId = (req: Request) => {
     const decoded = jwt.decode(req.cookies.token) as {
-        user: UserData
-    }
+        user: UserData;
+    };
 
     if (!decoded) {
-        throw new UnauthorizedError("Error")
+        throw new UnauthorizedError("Error");
     }
 
-    return +decoded.user.id
-}
+    return +decoded.user.id;
+};

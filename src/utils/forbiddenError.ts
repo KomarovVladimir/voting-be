@@ -1,6 +1,6 @@
-import { httpStatusCodes } from "common/httpStatusCodes"
+import { httpStatusCodes } from "common/httpStatusCodes";
 
-import { BaseError } from "./baseError"
+import { BaseError } from "./baseError";
 
 export class ForbiddenError extends BaseError {
     constructor(
@@ -9,6 +9,6 @@ export class ForbiddenError extends BaseError {
         statusCode = httpStatusCodes.UNAUTHORIZED,
         isOperational = true
     ) {
-        super(name, message, statusCode, isOperational)
+        super(name, message, statusCode, isOperational);
     }
 }

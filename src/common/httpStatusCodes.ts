@@ -7,4 +7,4 @@ export const httpStatusCodes = {
     FORBIDDEN: 403,
     NOT_FOUND: 404,
     INTERNAL_SERVER: 500,
-}
+};

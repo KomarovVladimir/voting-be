@@ -1,9 +1,9 @@
-import { BaseError } from "./baseError"
+import { BaseError } from "./baseError";
 
 export function isOperationalError(err: Error | BaseError) {
     if (err instanceof BaseError) {
-        return err.isOperational
+        return err.isOperational;
     }
 
-    return false
+    return false;
 }

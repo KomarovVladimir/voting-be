@@ -1,8 +1,8 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
-import { ItemData } from "types"
+import { ItemData } from "types";
 
-import { pool } from "database"
+import { pool } from "database";
 
 //TODO: Update the return types
 //TODO: Update the params types
@@ -12,21 +12,21 @@ export class Item {
         const sql = `
             INSERT INTO item (name, room_id)
             VALUES(?, ?);
-        `
+        `;
         const [result] = await pool.execute<ResultSetHeader>(sql, [
             name,
             roomId,
-        ])
+        ]);
 
-        return result
+        return result;
     }
 
     static async getByRoomId({
         userId,
         roomId,
     }: {
-        userId: number
-        roomId: number
+        userId: number;
+        roomId: number;
     }) {
         const sql = `
             SELECT item.id, item.name, COUNT(vote.user_id) votes, CAST(SUM(CASE WHEN vote.user_id = ? THEN 1 ELSE 0 END) AS UNSIGNED) voted
@@ -35,20 +35,20 @@ export class Item {
             ON item.id = vote.item_id AND item.room_id = vote.room_id
             WHERE item.room_id = ?
             GROUP BY item.id;
-        `
+        `;
         const [result] = await pool.execute<RowDataPacket[]>(sql, [
             userId,
             roomId,
-        ])
+        ]);
 
-        return result as ItemData[]
+        return result as ItemData[];
     }
 
     static async getById(id: number) {
-        const sql = `SELECT * FROM item WHERE id = ?;`
-        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
+        const sql = `SELECT * FROM item WHERE id = ?;`;
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id]);
 
-        return result[0] as ItemData
+        return result[0] as ItemData;
     }
 
     static async updateById({ id, name }: ItemData) {
@@ -56,17 +56,17 @@ export class Item {
             UPDATE item
             SET name = ?,
             WHERE id = ?;
-        `
-        const [result] = await pool.execute<ResultSetHeader>(sql, [name, id])
+        `;
+        const [result] = await pool.execute<ResultSetHeader>(sql, [name, id]);
 
-        return result
+        return result;
     }
 
     static async deleteById(id: number) {
-        const sql = "DELETE FROM item WHERE id = ?;"
+        const sql = "DELETE FROM item WHERE id = ?;";
 
-        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id]);
 
-        return result
+        return result;
     }
 }

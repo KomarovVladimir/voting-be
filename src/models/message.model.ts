@@ -1,8 +1,8 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
-import moment from "moment"
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import moment from "moment";
 
-import { MessageData } from "types"
-import { pool } from "database"
+import { MessageData } from "types";
+import { pool } from "database";
 
 //TODO: Update the return types
 //TODO: Add all the checks
@@ -13,20 +13,22 @@ export class Message {
         text,
         postingDate,
     }: Pick<MessageData, "roomId" | "userId" | "text" | "postingDate">) {
-        const mysqlTimestamp = moment(postingDate).format("YYYY-MM-DD HH:mm:ss")
+        const mysqlTimestamp = moment(postingDate).format(
+            "YYYY-MM-DD HH:mm:ss"
+        );
         const sql = `
             INSERT INTO message (room_id, user_id, text, created)
             VALUES (?, ?, ?, ?);
-        `
+        `;
 
         const [result] = await pool.execute<ResultSetHeader>(sql, [
             roomId,
             userId,
             text,
             mysqlTimestamp,
-        ])
+        ]);
 
-        return result
+        return result;
     }
 
     static async getByRoomId(roomId: string) {
@@ -36,40 +38,40 @@ export class Message {
             LEFT JOIN user AS u
             ON m.user_id = u.id
             WHERE room_id = ?;
-        `
-        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId])
+        `;
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [roomId]);
 
-        return result as MessageData[]
+        return result as MessageData[];
     }
 
     static async getById(id: number) {
-        const sql = `SELECT * FROM message WHERE id = ?;`
-        const [result] = await pool.execute<RowDataPacket[]>(sql, [id])
+        const sql = `SELECT * FROM message WHERE id = ?;`;
+        const [result] = await pool.execute<RowDataPacket[]>(sql, [id]);
 
-        return result[0] as MessageData
+        return result[0] as MessageData;
     }
 
     static async updateById({ id, text }: Pick<MessageData, "id" | "text">) {
-        const currentDate = Date.now()
+        const currentDate = Date.now();
         const sql = `
             UPDATE message
             SET text = ?, updating_date = ?
             WHERE id = ?;
-        `
+        `;
         const [result] = await pool.execute<ResultSetHeader>(sql, [
             text,
             currentDate,
             id,
-        ])
+        ]);
 
-        return result
+        return result;
     }
 
     static async deleteById(id: number) {
-        const sql = "DELETE FROM message WHERE id = ?;"
+        const sql = "DELETE FROM message WHERE id = ?;";
 
-        const [result] = await pool.execute<ResultSetHeader>(sql, [id])
+        const [result] = await pool.execute<ResultSetHeader>(sql, [id]);
 
-        return result
+        return result;
     }
 }

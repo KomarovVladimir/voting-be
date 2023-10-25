@@ -1,6 +1,6 @@
-import { httpStatusCodes } from "common/httpStatusCodes"
+import { httpStatusCodes } from "common/httpStatusCodes";
 
-import { BaseError } from "./baseError"
+import { BaseError } from "./baseError";
 
 export class Api404Error extends BaseError {
     constructor(
@@ -9,6 +9,6 @@ export class Api404Error extends BaseError {
         statusCode = httpStatusCodes.NOT_FOUND,
         isOperational = true
     ) {
-        super(name, message, statusCode, isOperational)
+        super(name, message, statusCode, isOperational);
     }
 }

@@ -1,11 +1,11 @@
-import express from "express"
+import express from "express";
 
-import { verifyToken } from "middleware"
+import { verifyToken } from "middleware";
 
-import { privateRouter } from "./private.router"
-import { authRouter } from "./auth.router"
+import { privateRouter } from "./private.router";
+import { authRouter } from "./auth.router";
 
-export const apiRouter = express.Router()
+export const apiRouter = express.Router();
 
-apiRouter.use("/", authRouter)
-apiRouter.use("/", verifyToken, privateRouter)
+apiRouter.use("/", authRouter);
+apiRouter.use("/", verifyToken, privateRouter);

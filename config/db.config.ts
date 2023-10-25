@@ -4,4 +4,4 @@ export const dbConfig = {
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     multipleStatements: true,
-}
+};

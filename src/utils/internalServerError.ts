@@ -1,6 +1,6 @@
-import { httpStatusCodes } from "common/httpStatusCodes"
+import { httpStatusCodes } from "common/httpStatusCodes";
 
-import { BaseError } from "./baseError"
+import { BaseError } from "./baseError";
 
 export class InternalServerError extends BaseError {
     constructor(
@@ -9,6 +9,6 @@ export class InternalServerError extends BaseError {
         statusCode = httpStatusCodes.INTERNAL_SERVER,
         isOperational = true
     ) {
-        super(name, message, statusCode, isOperational)
+        super(name, message, statusCode, isOperational);
     }
 }
