@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import "express-async-errors";
 import cookieParser from "cookie-parser";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
 
 //TODO: Update imports
 import { isOperationalError, logError } from "utils";
@@ -24,6 +26,20 @@ process.on("unhandledRejection", (err) => {
 //TODO: Update the cors
 const port = process.env.PORT;
 export const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:3000",
+        credentials: true,
+    },
+});
+
+io.on("connection", (socket) => {
+    console.log("a user connected");
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
+});
 
 app.use(express.json());
 app.use(
@@ -40,4 +56,4 @@ app.use("/api/v1", apiRouter);
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Running on port ${port}`));
+httpServer.listen(port, () => console.log(`Running on port ${port}`));

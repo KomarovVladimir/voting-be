@@ -67,7 +67,7 @@ export const login = async (
         delete user.password;
 
         const token = jwt.sign({ user }, process.env.SECRET_KEY, {
-            expiresIn: "30m",
+            expiresIn: "5m",
         });
 
         res.cookie("token", token, {
@@ -76,7 +76,6 @@ export const login = async (
             sameSite: "strict",
             expires: new Date(Number(new Date()) + 30 * 60 * 1000),
         });
-        console.log(token);
 
         res.status(httpStatusCodes.OK).json({
             id: user.id,
